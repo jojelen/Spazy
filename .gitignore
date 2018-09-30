@@ -1,0 +1,5 @@
+# Ignoring files ending with...
+*.o
+*.a
+lib
+dep
