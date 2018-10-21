@@ -60,25 +60,16 @@ void Spazy::run(unsigned int numPlayers) {
 }
 
 void Spazy::shutDownGame() {
-  _popUps.push_back(new PopUp(glm::vec2(0.0f, 0.0f), 1000, gameOver));
-
+  _gameContent.addGameOver();
+  
   _gamestate = GameState::MENU;
 }
 
 void Spazy::clearGameContent() {
 
   _currentLevel = 1;
-  
-  for (unsigned int i = 0; i < _entities.size(); ++i)
-    delete _entities[i];
+ _gameContent.deleteContent();
 
-  _entities.clear();
-  _asteroids.clear();
-
-  for (unsigned int i = 0; i < _popUps.size(); ++i)
-    delete _popUps[i];
-
-  _popUps.clear();
 }
 
 void Spazy::initSystems() {
@@ -92,10 +83,7 @@ void Spazy::initSystems() {
 
     initShaders();
 
-    // Initialize SpriteBatch
-    _entitySpriteBatch.init();
-    _spriteBatch.init();
-    _popBatch.init();
+    _gameContent.initializeSpriteBatches(_screenWidth, _screenHeight);
 
     // Load pngs
     KingPin::ResourceManager::getTexture(
@@ -125,7 +113,7 @@ void Spazy::initSystems() {
   std::cout << "Initializing Players!\n"; // DEBUG
   // Initialize player spaceship
   for (int i = 0; i < _numPlayers; ++i)
-    addPlayer(i);
+    _gameContent.addPlayer(i, &_inputManager);
 
   std::cout << "Initializing World!\n"; // DEBUG
   // Initialize the world background
@@ -136,7 +124,7 @@ void Spazy::initSystems() {
 
 void Spazy::startLevel(unsigned int level) {
   for (int i = 0; i < level; ++i)
-    addAsteroid();
+    _gameContent.addAsteroid();
 }
 
 void Spazy::initShaders() {
@@ -242,27 +230,15 @@ void Spazy::processInput() {
 void Spazy::printScore() const { printf("Score: %i\n", _score); }
 
 void Spazy::updateDynamicalContent(float deltaTime) {
-  // Update entities
-  for (auto &entity : _entities)
-    entity->update(deltaTime);
 
-  // Checks if the player is colliding with the asteroids
-  for (int i = 0; i < _players.size(); ++i) {
-    if (_players[i]->isColliding(_entities)) {
-      std::cout << "delete _players[i]\n"; // DEBUG
-      delete _players[i];
-      _entities.erase(_entities.begin() + i);
-      _players.erase(_players.begin() + i);
-      std::cout << "have erased player\n"; // DEBUG
-    }
-  }
-
+	_gameContent.update( deltaTime);
+	
   // Check if there are no players left
-  if (_players.size() == 0)
+  if (_gameContent.getNumPlayers() == 0)
     shutDownGame();
 
   // Start new level if there are no asteroids left
-  if (_entities.size() == _players.size()) {
+  if ( _gameContent.getNumAsteroids() == 0 ) {
     std::cout << "Starting level " << _currentLevel + 1 << std::endl; // DEBUG
     startLevel(++_currentLevel);
   }
@@ -294,25 +270,7 @@ void Spazy::drawGame() {
   // Draw world
   _world.draw();
 
-  // Draw the Entities
-  _entitySpriteBatch.begin();
-  for (int i = 0; i < _entities.size(); i++) {
-    _entities[i]->draw(_entitySpriteBatch);
-  }
-  _entitySpriteBatch.end();
-  _entitySpriteBatch.renderBatch();
-
-  _popBatch.begin();
-
-  // Draw the PopUps
-  for (int i = 0; i < _popUps.size(); i++) {
-    if (_popUps[i]->draw(_popBatch)) {
-      _popUps.erase(_popUps.begin() + i);
-      // i--;
-    }
-  }
-  _popBatch.end();
-  _popBatch.renderBatch();
+_gameContent.draw();
 
   //----------------------------------------------------------------------------
 
@@ -322,33 +280,3 @@ void Spazy::drawGame() {
   _window.swapBuffer();
 }
 
-void Spazy::addPlayer(int controls) {
-  std::mt19937 rng;
-  rng.seed(std::random_device()());
-  std::uniform_int_distribution<std::mt19937::result_type> dist(0, 100);
-
-  // Set position
-  glm::vec2 position =
-      glm::vec2(-_screenWidth / 2 + 0.01 * dist(rng) * _screenWidth,
-                -_screenHeight / 2 + 0.01 * dist(rng) * _screenHeight);
-
-  _players.push_back(new Spaceship());
-  _players.back()->init(0.0f, position, _inputManager);
-  _players.back()->setSize(50.0f, 50.0f);
-  switch (controls) {
-  case 0:
-    break;
-  case 1:
-    SpaceshipControls controls(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT,
-                               SDLK_RCTRL);
-    _players.back()->setControls(controls);
-    break;
-  }
-  _entities.push_back(_players.back());
-}
-
-void Spazy::addAsteroid() {
-  _asteroids.push_back(new Asteroid(_screenWidth, _screenHeight));
-  _asteroids.back()->setSize(50.0f, 50.0f);
-  _entities.push_back(_asteroids.back());
-}

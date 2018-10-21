@@ -12,6 +12,7 @@
 #include "PopUp.h"
 #include "Spaceship.h"
 #include "World.h"
+#include "GameContent.h"
 
 enum class GameState
 {
@@ -47,8 +48,6 @@ private:
 
   void startLevel(unsigned int level);
   
-  void addPlayer(int controls);
-  void addAsteroid();
 
 private:
   /// Member Variables
@@ -57,16 +56,8 @@ private:
   KingPin::InputManager _inputManager;  // Handles input
   KingPin::Camera2D _camera;            // Main Camera
 
-  KingPin::SpriteBatch _entitySpriteBatch;
-  KingPin::SpriteBatch _spriteBatch;
-  KingPin::SpriteBatch _popBatch;
-  std::vector<Entity *> _entities;
-  std::vector<Asteroid *> _asteroids;
-  std::vector<PopUp *> _popUps;
-  std::vector<Laser> _lasers;
-  std::vector<Spaceship *> _players;
 
-  
+  GameContent _gameContent; // Handles the asteroids, players, etc.  
   
   World _world;
 
