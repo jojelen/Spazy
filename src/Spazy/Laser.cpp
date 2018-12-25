@@ -6,10 +6,11 @@ Laser::Laser(glm::vec2 pos, glm::vec2 dir, float speed, int lifeTime)
     : _lifeTime(lifeTime), _position(pos), _direction(dir), _speed(speed)
 {
   _angle = atan(dir.y / dir.x);
+  _angle += 1.577;
   if (dir.x < 0)
     _angle += 3.1415;
 
-  _textureID = KingPin::ResourceManager::getTexture("src/Spazy/res/textures/circle.png").id;
+  _textureID = KingPin::ResourceManager::getTexture("src/Spazy/res/textures/laserRed.png").id;
 }
 
 Laser::~Laser() {}
@@ -19,9 +20,10 @@ void Laser::draw(KingPin::SpriteBatch &spriteBatch)
   glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
   KingPin::Color color(255, 255, 255, 255);
 
-  float diameter = 10.0f;
+  static const float width = 5.0f;
+  static const float height = 25.0f;
   glm::vec4 posAndSize =
-      glm::vec4(_position.x, _position.y, diameter, diameter);
+      glm::vec4(_position.x, _position.y, width, height);
   spriteBatch.draw(posAndSize, _angle, uv, _textureID, 0.0f, color);
 }
 

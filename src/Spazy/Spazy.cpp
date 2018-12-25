@@ -287,7 +287,7 @@ void Spazy::loadTexturesIntoKingPin() {
   ResourceManager::getTexture("src/Spazy/res/textures/playerForward.png");
   ResourceManager::getTexture("src/Spazy/res/textures/1.png");
   ResourceManager::getTexture("src/Spazy/res/textures/gameover.png");
-  ResourceManager::getTexture("src/Spazy/res/textures/circle.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/laserRed.png");
   ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion1.png");
   ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion2.png");
   ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion3.png");

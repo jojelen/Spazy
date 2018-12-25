@@ -80,8 +80,8 @@ void Spaceship::update(float deltaTime)
     if (_gunReload == 0)
     {
       _lasers.emplace_back(_position + 0.5f * (getSize()).y * getDirection(),
-                           getDirection(), 10.0f, 1000);
-      _gunReload = 10;
+                           getDirection(), 15.0f, 1000);
+      _gunReload = 20; // Reload time
     }
   }
 
@@ -112,9 +112,9 @@ bool Spaceship::isColliding(std::vector<Entity *> &entities)
       _score++;
     }
   }
+
   if ( _entityStatus != DESTROYED)
   {
-
   // Check if ship is colliding
   for (int i = 1; i < entities.size(); i++)
   {

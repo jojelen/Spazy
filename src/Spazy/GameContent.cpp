@@ -83,8 +83,7 @@ void GameContent::update(float deltaTime)
 
     if (_players[i]->isColliding(_entities))
     {
-      _players[i]->setEntityStatus(DESTROYED);
-      std::cout << "have set player status to DESTROYED\n"; // DEBUG
+      addExplosion(_players[i]->getPosition());
     }
   }
 
