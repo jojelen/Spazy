@@ -7,6 +7,10 @@ enum EntityType {
   ASTEROID, SPACESHIP, UNKNOWN
 };
 
+enum EntityStatus {
+  DESTROYED, DAMAGED, FINE
+};
+
 class Entity
 {
 public:
@@ -14,7 +18,7 @@ public:
   virtual ~Entity();
 
   virtual void update(float deltaTime) = 0;
-  void projectileHit(glm::vec2 momentum);
+  void projectileHit(glm::vec2 momentum, float power);
 
   void draw(KingPin::SpriteBatch &spriteBatch);
   virtual void drawEffects(KingPin::SpriteBatch &spriteBatch) = 0;
@@ -32,22 +36,24 @@ public:
   glm::vec2 getVelocity() const;
 
   EntityType getEntityType() const;
-  void spunk();
-  bool getSpunkStatus() const;
+  EntityStatus getEntityStatus() const;
+  void setEntityStatus( const EntityStatus status);
 
   static float _worldWidth;
   static float _worldHeight;
 
 protected:
-  bool _spunked;
+
   float _width, _height;
   float _mass;
+  float _life;
   float _speed, _maxSpeed;
   float _angle;
 
   int _textureID;
 
   EntityType _entityType;
+  EntityStatus _entityStatus;
 
   glm::vec2 _position;
   glm::vec2 _velocity;

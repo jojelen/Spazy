@@ -61,18 +61,18 @@ void Spazy::run(unsigned int numPlayers) {
 
 void Spazy::shutDownGame() {
   _gameContent.addGameOver();
-  
+
   _gamestate = GameState::MENU;
 }
 
 void Spazy::clearGameContent() {
 
   _currentLevel = 1;
- _gameContent.deleteContent();
-
+  _gameContent.deleteContent();
 }
 
 void Spazy::initSystems() {
+
   if (!_windowInitialized) {
     std::cout << "Initializing KingPin!\n"; // DEBUG
     // Initialize KingPin engine
@@ -85,20 +85,7 @@ void Spazy::initSystems() {
 
     _gameContent.initializeSpriteBatches(_screenWidth, _screenHeight);
 
-    // Load pngs
-    KingPin::ResourceManager::getTexture(
-        "src/Spazy/res/textures/asteroid.png");
-    KingPin::ResourceManager::getTexture("src/Spazy/res/textures/player.png");
-    KingPin::ResourceManager::getTexture(
-        "src/Spazy/res/textures/playerLeft.png");
-    KingPin::ResourceManager::getTexture(
-        "src/Spazy/res/textures/playerRight.png");
-    KingPin::ResourceManager::getTexture(
-        "src/Spazy/res/textures/playerForward.png");
-    KingPin::ResourceManager::getTexture("src/Spazy/res/textures/1.png");
-    KingPin::ResourceManager::getTexture(
-        "src/Spazy/res/textures/gameover.png");
-    KingPin::ResourceManager::getTexture("src/Spazy/res/textures/circle.png");
+    loadTexturesIntoKingPin();
 
     // Set closed topology
     Entity::setWorldSize(_screenWidth, _screenHeight);
@@ -110,21 +97,29 @@ void Spazy::initSystems() {
 
   clearGameContent();
 
-  std::cout << "Initializing Players!\n"; // DEBUG
-  // Initialize player spaceship
-  for (int i = 0; i < _numPlayers; ++i)
-    _gameContent.addPlayer(i, &_inputManager);
+  addPlayers();
 
   std::cout << "Initializing World!\n"; // DEBUG
-  // Initialize the world background
-  _world.init();
+  _world.init();                        // Initialize the world background
 
   startLevel(_currentLevel);
 }
 
 void Spazy::startLevel(unsigned int level) {
-  for (int i = 0; i < level; ++i)
+  // Resets the players to FINE status
+  for (int i = 1; i <= _numPlayers; ++i)
+    _gameContent.addPlayer(i, &_inputManager);
+  // Adds content of level
+  for (int i = 0; i < 3 * level; ++i) {
     _gameContent.addAsteroid();
+  }
+}
+
+void Spazy::addPlayers() {
+  std::cout << "Initializing Players!\n"; // DEBUG
+  // Initialize player spaceship
+  for (int i = 1; i <= _numPlayers; ++i)
+    _gameContent.addPlayer(i, &_inputManager);
 }
 
 void Spazy::initShaders() {
@@ -208,12 +203,13 @@ void Spazy::processInput() {
     }
   }
 
-  if (_inputManager.isKeyPressed(SDLK_q)) {
-    _camera.setScale(_camera.getScale() + SCALE_SPEED);
-  }
-  if (_inputManager.isKeyPressed(SDLK_e)) {
-    _camera.setScale(_camera.getScale() - SCALE_SPEED);
-  }
+  // Zoom in and out
+  // if (_inputManager.isKeyPressed(SDLK_q)) {
+  //   _camera.setScale(_camera.getScale() + SCALE_SPEED);
+  // }
+  // if (_inputManager.isKeyPressed(SDLK_e)) {
+  //   _camera.setScale(_camera.getScale() - SCALE_SPEED);
+  // }
 
   if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT)) {
     glm::vec2 mouseCoords = _inputManager.getMouseCoords();
@@ -231,14 +227,14 @@ void Spazy::printScore() const { printf("Score: %i\n", _score); }
 
 void Spazy::updateDynamicalContent(float deltaTime) {
 
-	_gameContent.update( deltaTime);
-	
+  _gameContent.update(deltaTime);
+
   // Check if there are no players left
   if (_gameContent.getNumPlayers() == 0)
     shutDownGame();
 
   // Start new level if there are no asteroids left
-  if ( _gameContent.getNumAsteroids() == 0 ) {
+  if (_gameContent.getNumAsteroids() == 0) {
     std::cout << "Starting level " << _currentLevel + 1 << std::endl; // DEBUG
     startLevel(++_currentLevel);
   }
@@ -270,7 +266,7 @@ void Spazy::drawGame() {
   // Draw world
   _world.draw();
 
-_gameContent.draw();
+  _gameContent.draw();
 
   //----------------------------------------------------------------------------
 
@@ -280,3 +276,22 @@ _gameContent.draw();
   _window.swapBuffer();
 }
 
+void Spazy::loadTexturesIntoKingPin() {
+  using namespace KingPin;
+
+  // Load pngs
+  ResourceManager::getTexture("src/Spazy/res/textures/asteroid.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/player.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/playerLeft.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/playerRight.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/playerForward.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/1.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/gameover.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/circle.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion1.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion2.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion3.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion4.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion5.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion6.png");
+}

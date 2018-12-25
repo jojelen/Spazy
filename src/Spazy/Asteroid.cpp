@@ -3,7 +3,7 @@
 
 #include <random>
 
-Asteroid::Asteroid(float screenWidth, float screenHeight)
+Asteroid::Asteroid( const glm::vec2 pos)
 {
   _entityType = ASTEROID;
   _textureID =
@@ -14,11 +14,9 @@ Asteroid::Asteroid(float screenWidth, float screenHeight)
   std::uniform_int_distribution<std::mt19937::result_type> dist(0, 100);
 
   // Set position
-  _position = glm::vec2(-screenWidth / 2 + 0.01 * dist(rng) * screenWidth,
-                        -screenHeight / 2 + 0.01 * dist(rng) * screenHeight);
+  _position = pos;
 
   _mass = 10.0f;
-  _spunked = false;
 
   _angle = dist(rng) * 0.05;
   _speed = dist(rng) * 0.05;

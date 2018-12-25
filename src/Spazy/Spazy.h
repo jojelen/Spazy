@@ -56,6 +56,7 @@ private:
   KingPin::InputManager _inputManager;  // Handles input
   KingPin::Camera2D _camera;            // Main Camera
 
+  void loadTexturesIntoKingPin();
 
   GameContent _gameContent; // Handles the asteroids, players, etc.  
   
@@ -71,6 +72,8 @@ private:
 
   int _score;
   void printScore() const;
+
+  void addPlayers();
 
   int _currentLevel;
 };

@@ -3,17 +3,19 @@
 
 #include <iostream>
 
+using namespace std;
+
 float Entity::_worldWidth = 1024.0f;
 float Entity::_worldHeight = 768.0f;
 
 Entity::Entity()
-    : _width(50.0f), _height(50.f), _speed(0), _maxSpeed(4.0f), _angle(0.0f),
-      _entityType(UNKNOWN),
+    : _width(50.0f), _height(50.f), _life(1.), _speed(0), _maxSpeed(4.0f), _angle(0.0f),
+      _entityType(UNKNOWN), _entityStatus(FINE),
       _position(0, 0), _velocity(0.0f, 0.0f) {}
 
 Entity::~Entity() 
 {
-  std::cout << "Destroying entity!\n"; // DEBUG
+  // std::cout << "Destroying entity!\n"; // DEBUG
 }
 
 void Entity::setWorldSize(float width, float height) {
@@ -22,6 +24,8 @@ void Entity::setWorldSize(float width, float height) {
 }
 void Entity::draw(KingPin::SpriteBatch &spriteBatch) {
 
+  if ( _entityStatus != DESTROYED)
+  {
   checkPosition();
 
   glm::vec4 destRect(_position.x, _position.y, _width, _height);
@@ -34,14 +38,15 @@ void Entity::draw(KingPin::SpriteBatch &spriteBatch) {
   glm::vec4 mirrorRightRect(_position.x + _worldWidth, _position.y, _width,
                             _height);
 
-  const glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
-  KingPin::Color color(255, 255, 255, 255);
+  static const glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
+  static const KingPin::Color color(255, 255, 255, 255);
 
   spriteBatch.draw(destRect, _angle, uvRect, _textureID, 1.0f, color);
   spriteBatch.draw(mirrorDownRect, _angle, uvRect, _textureID, 1.0f, color);
   spriteBatch.draw(mirrorUpRect, _angle, uvRect, _textureID, 1.0f, color);
   spriteBatch.draw(mirrorLeftRect, _angle, uvRect, _textureID, 1.0f, color);
   spriteBatch.draw(mirrorRightRect, _angle, uvRect, _textureID, 1.0f, color);
+  }
 
   drawEffects(spriteBatch);
 }
@@ -51,11 +56,16 @@ void Entity::setSize(float width, float height) {
   _height = height;
 }
 
-void Entity::projectileHit(glm::vec2 momentum) {
-  // _textureID =
-  //     KingPin::ResourceManager::getTexture("src/Spazy/res/textures/SpunkedMonkey.png").id;
+void Entity::projectileHit(glm::vec2 momentum, float power) {
   momentum /= _mass;
   _velocity += momentum;
+
+  _life -= power;
+  if ( _life <= 0.)
+  {
+    _entityStatus = DESTROYED;
+  }
+    
 }
 
 void Entity::checkPosition() {
@@ -79,5 +89,10 @@ glm::vec2 Entity::getDirection() const {
   return glm::vec2(std::cos(_angle), std::sin(_angle));
 }
 EntityType Entity::getEntityType() const { return _entityType; }
-void Entity::spunk() { _spunked = true; }
-bool Entity::getSpunkStatus() const { return _spunked; }
+
+EntityStatus Entity::getEntityStatus() const { return _entityStatus; }
+
+void Entity::setEntityStatus( const EntityStatus status)
+{
+  _entityStatus = status;
+}

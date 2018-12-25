@@ -13,6 +13,7 @@ Laser::Laser(glm::vec2 pos, glm::vec2 dir, float speed, int lifeTime)
 }
 
 Laser::~Laser() {}
+
 void Laser::draw(KingPin::SpriteBatch &spriteBatch)
 {
   glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
@@ -41,29 +42,20 @@ bool Laser::isColliding(std::vector<Entity *> &entities)
 
   for (int i = 1; i < entities.size(); i++)
   {
-    if (entities[i]->getEntityType() != SPACESHIP) {
-    glm::vec2 entitySize = entities[i]->getSize();
-    float radie = entitySize.x > entitySize.y ? entitySize.x : entitySize.y;
-    glm::vec2 temp = entities[i]->getPosition();
-    float distance = glm::distance(entities[i]->getPosition(), _position);
-
-    if (distance < radie)
+    if (entities[i]->getEntityType() != SPACESHIP)
     {
-      delete entities[i];
-      entities.erase(entities.begin() + i);
-      // entities[i]->projectileHit(momentum);
-      _lifeTime = 0;
-      // if (entities[i]->getSpunkStatus() == false)
-      // {
-      //   entities[i]->spunk();
-      //   return true;
-      // }
-      // else
-      // {
-      //   entities[i]->spunk();
-      //   return false;
-      // }
-    }
+      glm::vec2 entitySize = entities[i]->getSize();
+      float radie = entitySize.x > entitySize.y ? entitySize.x : entitySize.y;
+      glm::vec2 temp = entities[i]->getPosition();
+      float distance = glm::distance(entities[i]->getPosition(), _position);
+
+      if (distance < radie)
+      {
+        // delete entities[i];
+        // entities.erase(entities.begin() + i);
+        entities[i]->projectileHit(momentum, 1.);
+        _lifeTime = 0;
+      }
     }
   }
   return false;

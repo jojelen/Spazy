@@ -1,7 +1,7 @@
 #include "Spaceship.h"
 #include "KingPin/ResourceManager.h"
 
-Spaceship::Spaceship() : _gunReload(0), _score(0)
+Spaceship::Spaceship(const int playerNr) : _gunReload(0), _score(0), _playerNr(playerNr)
 { _entityType = SPACESHIP; }
 
 Spaceship::~Spaceship()  {}
@@ -30,6 +30,8 @@ void Spaceship::setControls(const SpaceshipControls &controls)
 
 void Spaceship::update(float deltaTime)
 {
+  if ( _entityStatus != DESTROYED)
+  {
   // Moves the player around
   if (_inputManager->isKeyDown(_keys.right))
   {
@@ -85,7 +87,7 @@ void Spaceship::update(float deltaTime)
 
   if (_gunReload > 0)
     _gunReload--;
-
+  }
   // Update lasers
   for (int i = 0; i < _lasers.size(); ++i)
   {
@@ -96,21 +98,22 @@ void Spaceship::update(float deltaTime)
       continue;
     }
   }
+  
 }
 
 bool Spaceship::isColliding(std::vector<Entity *> &entities)
 {
+  
   // Check laser collisions
   for (int i = 0; i < _lasers.size(); i++)
   {
     if (_lasers[i].isColliding(entities))
     {
-      // _popUps.push_back(new PopUp(_position, 100, plusOne));
       _score++;
-      // printScore();
-      // addAsteroid();
     }
   }
+  if ( _entityStatus != DESTROYED)
+  {
 
   // Check if ship is colliding
   for (int i = 1; i < entities.size(); i++)
@@ -124,12 +127,14 @@ bool Spaceship::isColliding(std::vector<Entity *> &entities)
 
       if (distance < radie)
       {
+        _entityStatus = DESTROYED;
         return true;
       }
     }
   }
+  }
   return false;
-}
+} 
 
 void Spaceship::drawEffects(KingPin::SpriteBatch &spriteBatch)
 {

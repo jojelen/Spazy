@@ -6,17 +6,18 @@
 enum PopID {
 	plusOne, start, gameOver
 };
-class PopUp
+
+class Effect
 {
 public:
-	PopUp(const glm::vec2& _position, int lifetime, PopID popID);
+	Effect();
 
-	~PopUp();
+	virtual ~Effect();
 
-	bool draw(KingPin::SpriteBatch& spriteBatch);
+  // Draws the effect, returns true if its lifetime runs out.
+	virtual bool draw(KingPin::SpriteBatch& spriteBatch) = 0;
 
-private:
-
+protected:
 	float _width, _height;
 
 	int _lifetime;
@@ -24,6 +25,30 @@ private:
 
 	int _textureID;
 	glm::vec2 _position;
+};
 
+//-----------------------------------------------------------------------------
+
+class Explosion : Effect
+{
+  public:
+  Explosion(const glm::vec2& pos, const float size);
+
+	~Explosion();
+
+	bool draw(KingPin::SpriteBatch& spriteBatch) override;
+
+private:
+  float _size;
+};
+
+class PopUp : Effect
+{
+public:
+	PopUp(const glm::vec2& pos, int lifetime, PopID popID);
+
+	~PopUp();
+
+	bool draw(KingPin::SpriteBatch& spriteBatch) override;
 };
 
