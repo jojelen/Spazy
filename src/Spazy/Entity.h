@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 
 enum EntityType {
-  ASTEROID, SPACESHIP, UNKNOWN
+  ASTEROID, SPACESHIP, UNKNOWN, BIRD
 };
 
 enum EntityStatus {
@@ -18,6 +18,9 @@ public:
   virtual ~Entity();
 
   virtual void update(float deltaTime) = 0;
+
+  void applyForce(glm::vec2 force, const float maxForce = -1.0f);
+
   void projectileHit(glm::vec2 momentum, float power);
 
   void draw(KingPin::SpriteBatch &spriteBatch);
@@ -35,6 +38,8 @@ public:
   glm::vec2 getPosition() const;
   glm::vec2 getDirection() const;
   glm::vec2 getVelocity() const;
+  float getSpeed() const;
+  float getMaxSpeed() const;
 
   EntityType getEntityType() const;
   EntityStatus getEntityStatus() const;

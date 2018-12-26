@@ -129,7 +129,7 @@ bool Spaceship::isColliding(std::vector<Entity *> &entities)
     // Check if ship is colliding
     for (int i = 1; i < entities.size(); i++)
     {
-      if (entities[i]->getEntityType() != SPACESHIP)
+      if (entities[i]->getEntityType() == ASTEROID)
       {
         glm::vec2 entitySize = entities[i]->getSize();
         float radie = entitySize.x > entitySize.y ? entitySize.x : entitySize.y;

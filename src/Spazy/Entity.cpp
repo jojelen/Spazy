@@ -70,6 +70,26 @@ void Entity::projectileHit(glm::vec2 momentum, float power) {
   // printVecInfo("vel after hit", _velocity); // DEBUG
 }
 
+void Entity::applyForce( glm::vec2 force, const float maxForce)
+{
+  if ( maxForce > 0)
+  {
+    if ( glm::length( force) > maxForce)
+    {
+      glm::normalize(force);
+      force *= maxForce;
+    }
+  }
+  
+  force /= _mass;
+  _velocity += force;
+}
+
+float Entity::getSpeed() const
+{
+  return glm::length(_velocity);
+}
+
 void Entity::checkPosition() {
   if (_position.y > _worldHeight / 2)
     _position.y = -_worldHeight / 2;
@@ -83,7 +103,13 @@ void Entity::checkPosition() {
 
 void Entity::setPosition(const glm::vec2 &pos) { _position = pos; }
 void Entity::setVelocity(const glm::vec2 &vel) { _velocity = vel; }
-void Entity::setSpeed(float speed) { _speed = speed; }
+void Entity::setSpeed(float speed) 
+{ 
+  _velocity = speed * glm::normalize( _velocity);
+  _speed = speed; 
+}
+
+float Entity::getMaxSpeed() const { return _maxSpeed;}
 
 glm::vec2 Entity::getSize() const { return glm::vec2(_width, _height); }
 glm::vec2 Entity::getPosition() const { return _position; }

@@ -106,13 +106,18 @@ void Spazy::initSystems() {
 }
 
 void Spazy::startLevel(unsigned int level) {
+
   // Resets the players to FINE status
   for (int i = 1; i <= _numPlayers; ++i)
     _gameContent.addPlayer(i, &_inputManager);
+
   // Adds content of level
-  for (int i = 0; i < 3 * level; ++i) {
+  for (int i = 0; i <  level; ++i) {
     _gameContent.addRandomAsteroid(100.0f);
   }
+
+  // Temp add of flock
+  _gameContent.addFlock();
 }
 
 void Spazy::addPlayers() {

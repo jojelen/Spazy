@@ -1,60 +1,67 @@
 #pragma once
 
-#include <KingPin/SpriteBatch.h>
 #include <KingPin/InputManager.h>
+#include <KingPin/SpriteBatch.h>
 
 #include <algorithm>
 
-#include "Entity.h"
 #include "Asteroid.h"
+#include "Entity.h"
 #include "Laser.h"
 #include "PopUp.h"
 #include "Spaceship.h"
+#include "Flock.h"
 
-class GameContent
-{
-	public:
-		GameContent();
-		~GameContent();
+class GameContent {
+public:
+  GameContent();
+  ~GameContent();
 
-		void deleteContent();
+  void deleteContent();
 
-		void initializeSpriteBatches(float screenWidth, float
-				screenHeight);
+  void initializeSpriteBatches(float screenWidth, float screenHeight);
 
-    // @brief: Updates the game content:
-    //  1.) Updates the players and subsequently their lasers. Checks for 
-    //      collisions with other entities.
-    //  2.) Updates other entities: checks DESTROYED status and deletes the 
-    //      entity and adds an explosion if so.
-		void update(float deltaTime);
+  // @brief: Updates the game content:
+  //  1.) Updates the players and subsequently their lasers. Checks for
+  //      collisions with other entities.
+  //  2.) Updates other entities: checks DESTROYED status and deletes the
+  //      entity and adds an explosion if so.
+  void update(float deltaTime);
 
-		void draw(); // Calls effects and entities draw functions
+  void draw(); // Calls effects and entities draw functions
 
-		void addGameOver(); // Adds a GAME OVER pop up sign
-		void addPlayer(int playerNr, KingPin::InputManager* inputManager);
-    void addRandomAsteroid(const float &radius);
-		void addAsteroid(const glm::vec2 &pos, const float &radius);
-    void addExplosion( const glm::vec2 pos);
+  void addGameOver(); // Adds a GAME OVER pop up sign
 
-		int getNumPlayers(); // Returns the number of players that are alive
-		int getNumAsteroids(); // Returns the number of asteroids
+  void addPlayer(int playerNr, KingPin::InputManager *inputManager);
 
-	private:
-    void printScore() const;
+  void addRandomAsteroid(const float &radius);
+  void addAsteroid(const glm::vec2 &pos, const float &radius);
 
-		KingPin::SpriteBatch _entitySpriteBatch;
-		KingPin::SpriteBatch _spriteBatch;
-		KingPin::SpriteBatch _popBatch;
+  void addExplosion(const glm::vec2 pos);
 
-		std::vector<Entity *> _entities;
-		std::vector<Asteroid *> _asteroids;
+  void addFlock();
 
-    std::vector<Effect * > _effects;
+  int getNumPlayers();   // Returns the number of players that are alive
+  int getNumAsteroids(); // Returns the number of asteroids
 
-		std::vector<Spaceship *> _players;
+private:
+  glm::vec2 getFreePosition() const; // Returns a position free of players
+  void printScore() const;
 
-		// For adding content within frame
-		float _screenWidth, _screenHeight; 
-		
+  KingPin::SpriteBatch _entitySpriteBatch;
+  KingPin::SpriteBatch _spriteBatch;
+  KingPin::SpriteBatch _popBatch;
+
+  std::vector<Entity *> _entities;
+  std::vector<Asteroid *> _asteroids;
+
+  std::vector<Bird*> _birds;
+  std::vector<Flock> _flocks;
+
+  std::vector<Effect *> _effects;
+
+  std::vector<Spaceship *> _players;
+
+  // For adding content within frame
+  float _screenWidth, _screenHeight;
 };
