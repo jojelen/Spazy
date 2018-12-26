@@ -111,7 +111,7 @@ void Spazy::startLevel(unsigned int level) {
     _gameContent.addPlayer(i, &_inputManager);
   // Adds content of level
   for (int i = 0; i < 3 * level; ++i) {
-    _gameContent.addAsteroid();
+    _gameContent.addRandomAsteroid(100.0f);
   }
 }
 
@@ -282,12 +282,13 @@ void Spazy::loadTexturesIntoKingPin() {
   // Load pngs
   ResourceManager::getTexture("src/Spazy/res/textures/asteroid.png");
   ResourceManager::getTexture("src/Spazy/res/textures/player.png");
-  ResourceManager::getTexture("src/Spazy/res/textures/playerLeft.png");
-  ResourceManager::getTexture("src/Spazy/res/textures/playerRight.png");
   ResourceManager::getTexture("src/Spazy/res/textures/playerForward.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/player2.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/playerForward2.png");
   ResourceManager::getTexture("src/Spazy/res/textures/1.png");
   ResourceManager::getTexture("src/Spazy/res/textures/gameover.png");
   ResourceManager::getTexture("src/Spazy/res/textures/laserRed.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/laserGreen.png");
   ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion1.png");
   ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion2.png");
   ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion3.png");

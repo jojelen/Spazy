@@ -3,8 +3,10 @@
 
 #include <random>
 
-Asteroid::Asteroid( const glm::vec2 pos)
+Asteroid::Asteroid( const glm::vec2 &pos, const float &width)
 {
+  setSize( width, width);
+
   _entityType = ASTEROID;
   _textureID =
   KingPin::ResourceManager::getTexture("src/Spazy/res/textures/asteroid.png").id;

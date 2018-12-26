@@ -1,5 +1,8 @@
 #include "GameContent.h"
+#include "HelpFunctions.h"
+
 #include <iostream>
+#include <string>
 
 GameContent::GameContent() {}
 
@@ -21,13 +24,14 @@ int GameContent::getNumPlayers()
 {
   int numPlayers = 0;
   for (auto &player : _players)
-    if ( player->getEntityStatus() != DESTROYED)
+    if (player->getEntityStatus() != DESTROYED)
       ++numPlayers;
   return numPlayers;
 }
 
 void GameContent::draw()
 {
+  // printScore();
 
   // Draw the Entities
   _entitySpriteBatch.begin();
@@ -91,16 +95,28 @@ void GameContent::update(float deltaTime)
   // Also checks for destroyed entities and adds explosions.
   for (int i = _players.size(); i < _entities.size(); ++i)
   {
+    // printVecInfo("ent" + std::to_string(i) + " vel", _entities[i]->getVelocity()); // DEBUG
     _entities[i]->update(deltaTime);
     if (_entities[i]->getEntityStatus() == DESTROYED)
     {
       addExplosion(_entities[i]->getPosition());
+
+      // Adds small asteroids if it was a large one
+      if (_entities[i]->getSize().x >= 50.0f)
+      {
+        static constexpr int nrAsteroids = 3;
+        // Splits up the velocity of the asteroid into several ones
+        std::vector<glm::vec2> velVec = splitVecIntoSeveral(_entities[i]->getVelocity(), nrAsteroids);
+        for (int j = 0; j < nrAsteroids; ++j)
+        {
+          addAsteroid(_entities[i]->getPosition(), 30.0f);
+          _asteroids.back()->setVelocity(velVec[j]);
+        }
+      }
       delete _entities[i];
       _entities.erase(_entities.begin() + i);
     }
   }
-
-  
 }
 
 void GameContent::addGameOver()
@@ -148,10 +164,10 @@ void GameContent::addPlayer(int playerNr, KingPin::InputManager *inputManager)
     _entities.push_back(_players.back());
   }
   else
-    _players[ playerNr - 1]->setEntityStatus(FINE);
+    _players[playerNr - 1]->setEntityStatus(FINE);
 }
 
-void GameContent::addAsteroid()
+void GameContent::addRandomAsteroid(const float &radius)
 {
   std::mt19937 rng;
   rng.seed(std::random_device()());
@@ -174,12 +190,25 @@ void GameContent::addAsteroid()
       break;
   }
 
-  _asteroids.push_back(new Asteroid(pos));
-  _asteroids.back()->setSize(50.0f, 50.0f);
+  addAsteroid(pos, radius);
+}
+
+void GameContent::addAsteroid(const glm::vec2 &pos, const float &radius)
+{
+  _asteroids.push_back(new Asteroid(pos, radius));
   _entities.push_back(_asteroids.back());
 }
 
 void GameContent::addExplosion(const glm::vec2 pos)
 {
   _effects.push_back((Effect *)new Explosion(pos, 100.));
+}
+
+void GameContent::printScore() const
+{
+  for (int i = 0; i < _players.size(); ++i)
+  {
+    std::cout << "Player " << (i + 1) << ": " << _players[i]->getScore() << " ";
+  }
+  std::cout << std::endl;
 }

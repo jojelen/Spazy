@@ -1,5 +1,6 @@
 #include "Entity.h"
 #include "KingPin/ResourceManager.h"
+#include "HelpFunctions.h"
 
 #include <iostream>
 
@@ -57,6 +58,7 @@ void Entity::setSize(float width, float height) {
 }
 
 void Entity::projectileHit(glm::vec2 momentum, float power) {
+  // printVecInfo("vel before hit", _velocity); // DEBUG
   momentum /= _mass;
   _velocity += momentum;
 
@@ -65,7 +67,7 @@ void Entity::projectileHit(glm::vec2 momentum, float power) {
   {
     _entityStatus = DESTROYED;
   }
-    
+  // printVecInfo("vel after hit", _velocity); // DEBUG
 }
 
 void Entity::checkPosition() {
@@ -79,7 +81,8 @@ void Entity::checkPosition() {
     _position.x = _worldWidth / 2;
 }
 
-void Entity::setPosition(glm::vec2 &pos) { _position = pos; }
+void Entity::setPosition(const glm::vec2 &pos) { _position = pos; }
+void Entity::setVelocity(const glm::vec2 &vel) { _velocity = vel; }
 void Entity::setSpeed(float speed) { _speed = speed; }
 
 glm::vec2 Entity::getSize() const { return glm::vec2(_width, _height); }

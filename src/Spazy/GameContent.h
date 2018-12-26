@@ -33,13 +33,15 @@ class GameContent
 
 		void addGameOver(); // Adds a GAME OVER pop up sign
 		void addPlayer(int playerNr, KingPin::InputManager* inputManager);
-		void addAsteroid();
+    void addRandomAsteroid(const float &radius);
+		void addAsteroid(const glm::vec2 &pos, const float &radius);
     void addExplosion( const glm::vec2 pos);
 
 		int getNumPlayers(); // Returns the number of players that are alive
 		int getNumAsteroids(); // Returns the number of asteroids
 
 	private:
+    void printScore() const;
 
 		KingPin::SpriteBatch _entitySpriteBatch;
 		KingPin::SpriteBatch _spriteBatch;

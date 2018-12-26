@@ -5,7 +5,7 @@
 class Asteroid : public Entity
 {
 public:
-  Asteroid( const glm::vec2 pos);
+  Asteroid( const glm::vec2 &pos, const float &width);
   ~Asteroid();
 
   void update(float deltaTime);

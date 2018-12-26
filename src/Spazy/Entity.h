@@ -26,9 +26,10 @@ public:
   static void setWorldSize(float width, float height);
 
   void setSize(float width, float height);
-  void setPosition(glm::vec2 &pos);
+  void setVelocity(const glm::vec2 &vel);
+  void setPosition(const glm::vec2 &pos);
   void setSpeed(float speed);
-  void checkPosition();
+  void checkPosition(); // Resets the _position to be within the frame
 
   glm::vec2 getSize() const;
   glm::vec2 getPosition() const;
