@@ -4,7 +4,7 @@
 
 Laser::Laser(const glm::vec2 &pos, const glm::vec2 &dir, const float &speed,
              const int &lifeTime, const COLOR &color)
-    : _lifeTime(lifeTime), _position(pos), _direction(dir), _speed(speed),
+    : _lifeTime(lifeTime), _position(pos), _direction(dir),  _speed(speed), _mass(20.f),
       _color(color)
 {
   _angle = atan(dir.y / dir.x);
@@ -78,7 +78,7 @@ void Laser::setColor(const COLOR color)
 
 bool Laser::isColliding(std::vector<Entity *> &entities)
 {
-  glm::vec2 momentum = _direction * _speed;
+  glm::vec2 momentum = _mass * _direction * _speed;
 
   for (int i = 1; i < entities.size(); i++)
   {

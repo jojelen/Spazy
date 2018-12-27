@@ -29,7 +29,9 @@ public:
   void update(float deltaTime);
   void drawEffects(KingPin::SpriteBatch &spriteBatch) override;
 
+  void isKilling(std::vector<Entity*> &entities);
   bool isColliding(std::vector<Entity *> &entities);
+
   int getScore();
 
 private:

@@ -86,11 +86,20 @@ void GameContent::deleteContent()
 }
 void GameContent::update(float deltaTime)
 {
+
+  // Temp fix:
+  std::vector<Entity*> killables;
+  for (auto &ent : _entities)
+    killables.push_back(ent);
+  for (auto &bird : _birds)
+    killables.push_back( (Entity*)bird);
+
   // std::cout << "GameContent::update\n";
   // Checks if the player is colliding with the asteroids
   for (int i = 0; i < _players.size(); ++i)
   {
     _players[i]->update(deltaTime);
+    _players[i]->isKilling( killables);
 
     if (_players[i]->isColliding(_entities))
     {
@@ -130,6 +139,7 @@ void GameContent::update(float deltaTime)
     }
   }
 
+  // Updating birds
   for (auto &bird : _birds)
     bird->update(deltaTime);
 
@@ -137,10 +147,8 @@ void GameContent::update(float deltaTime)
     flock.updateFlockBehavior(deltaTime);
 }
 
-void GameContent::addFlock()
+void GameContent::addFlock(const int nrBirds)
 {
-  static constexpr int nrBirds = 100;
-
   _flocks.emplace_back();
 
   for (int i = 0; i < nrBirds; ++i)

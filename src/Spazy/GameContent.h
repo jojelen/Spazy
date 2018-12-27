@@ -39,7 +39,7 @@ public:
 
   void addExplosion(const glm::vec2 pos);
 
-  void addFlock();
+  void addFlock(const int nrBirds);
 
   int getNumPlayers();   // Returns the number of players that are alive
   int getNumAsteroids(); // Returns the number of asteroids

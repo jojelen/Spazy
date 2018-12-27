@@ -112,18 +112,21 @@ void Spaceship::update(float deltaTime)
   }
 }
 
-bool Spaceship::isColliding(std::vector<Entity *> &entities)
+void Spaceship::isKilling(std::vector<Entity *> &entities)
 {
 
   // Check if laser is colliding with entities
   for (auto &laser : _lasers)
   {
-    if (laser.isColliding(entities))
+    if (laser.isColliding(entities)) // projectileHit if it hits and destroys laser
     {
       ++_score;
     }
   }
+}
 
+bool Spaceship::isColliding(std::vector<Entity *> &entities)
+{
   if (_entityStatus != DESTROYED)
   {
     // Check if ship is colliding

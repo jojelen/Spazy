@@ -31,6 +31,7 @@ private:
   int _lifeTime;
   int _textureID;
   float _speed;
+  float _mass;
   float _angle;
   glm::vec2 _direction;
   glm::vec2 _position;

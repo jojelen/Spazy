@@ -29,10 +29,10 @@ class Flock
 
   private:
     
-    static constexpr float _alignRadius = 400.0f;
-    static constexpr float _cohesionRadius = 100.0f;
+    static constexpr float _alignRadius = 600.0f;
+    static constexpr float _cohesionRadius = 400.0f;
     static constexpr float _avoidRadius = 50.0f;
-    static constexpr float _maxForce = 1.0f;
+    static constexpr float _maxForce = 0.5f;
 
     Entity* _target;
     std::vector<Bird*> _birds;

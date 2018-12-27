@@ -117,7 +117,7 @@ void Spazy::startLevel(unsigned int level) {
   }
 
   // Temp add of flock
-  _gameContent.addFlock();
+  _gameContent.addFlock(10);
 }
 
 void Spazy::addPlayers() {
@@ -286,6 +286,7 @@ void Spazy::loadTexturesIntoKingPin() {
 
   // Load pngs
   ResourceManager::getTexture("src/Spazy/res/textures/asteroid.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/asteroidDamaged.png");
   ResourceManager::getTexture("src/Spazy/res/textures/player.png");
   ResourceManager::getTexture("src/Spazy/res/textures/playerForward.png");
   ResourceManager::getTexture("src/Spazy/res/textures/player2.png");
@@ -300,4 +301,5 @@ void Spazy::loadTexturesIntoKingPin() {
   ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion4.png");
   ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion5.png");
   ResourceManager::getTexture("src/Spazy/res/textures/smallExplosion6.png");
+  ResourceManager::getTexture("src/Spazy/res/textures/enemyShip.png");
 }

@@ -7,6 +7,8 @@
 Asteroid::Asteroid( const glm::vec2 &pos, const float &width)
 {
   setSize( width, width);
+  if ( width >= 50.0f)
+    _life = 2.;
 
   _entityType = ASTEROID;
   _textureID =
@@ -15,7 +17,7 @@ Asteroid::Asteroid( const glm::vec2 &pos, const float &width)
   // Set position
   _position = pos;
 
-  _mass = 10.0f;
+  _mass = 1000.0f;
 
   _angle = randUnit() * 2.*M_PI;
   _speed = randUnit() * 5.;
@@ -32,6 +34,10 @@ void Asteroid::update(float deltaTime)
     _velocity = _maxSpeed *  glm::normalize(_velocity);
   }
   _position += _velocity * deltaTime; 
+
+  if ( _life <= 1.0f)
+    _textureID =
+  KingPin::ResourceManager::getTexture("src/Spazy/res/textures/asteroidDamaged.png").id;
 }
 
 void Asteroid::drawEffects(KingPin::SpriteBatch &spriteBatch) {}

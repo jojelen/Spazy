@@ -10,7 +10,7 @@ float Entity::_worldWidth = 1024.0f;
 float Entity::_worldHeight = 768.0f;
 
 Entity::Entity()
-    : _width(50.0f), _height(50.f), _life(1.), _speed(0), _maxSpeed(4.0f), _angle(0.0f),
+    : _width(50.0f), _height(50.f), _life(1.), _speed(0), _maxSpeed(10.0f), _angle(0.0f),
       _entityType(UNKNOWN), _entityStatus(FINE),
       _position(0, 0), _velocity(0.0f, 0.0f) {}
 
