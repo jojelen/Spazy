@@ -4,9 +4,9 @@
 
 #include <random>
 
-Asteroid::Asteroid( const glm::vec2 &pos, const float &width)
+Asteroid::Asteroid( const glm::vec2 &pos, const glm::vec2 &vel, const float &width,  const float &height)
 {
-  setSize( width, width);
+  setSize( width, height);
   if ( width >= 50.0f)
     _life = 2.;
 
@@ -16,13 +16,13 @@ Asteroid::Asteroid( const glm::vec2 &pos, const float &width)
 
   // Set position
   _position = pos;
-
+  _velocity = vel;
   _mass = 1000.0f;
 
-  _angle = randUnit() * 2.*M_PI;
-  _speed = randUnit() * 5.;
-  _speed *= 0.1;
-  _velocity = _speed * getUnitVec();
+  _angle = atan(vel.y/vel.x) + M_PI;
+  if ( vel.x < 0)
+    _angle += 1.577 + M_PI;
+  _speed = getSpeed();
 }
 
 Asteroid::~Asteroid() {}

@@ -2,10 +2,10 @@
 
 #include "Entity.h"
 
-class Asteroid : public Entity
-{
+class Asteroid : public Entity {
 public:
-  Asteroid( const glm::vec2 &pos, const float &width);
+  Asteroid(const glm::vec2 &pos, const glm::vec2 &vel, const float &width,
+           const float &height);
   ~Asteroid();
 
   void update(float deltaTime);

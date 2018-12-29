@@ -11,6 +11,7 @@
 #include "PopUp.h"
 #include "Spaceship.h"
 #include "Flock.h"
+#include "UFO.h"
 
 class GameContent {
 public:
@@ -35,7 +36,9 @@ public:
   void addPlayer(int playerNr, KingPin::InputManager *inputManager);
 
   void addRandomAsteroid(const float &radius);
-  void addAsteroid(const glm::vec2 &pos, const float &radius);
+  void addAsteroid(const glm::vec2 &pos,const glm::vec2 &vel, const float &radius);
+
+  void addUFO();
 
   void addExplosion(const glm::vec2 pos);
 
@@ -47,6 +50,9 @@ public:
 private:
   glm::vec2 getFreePosition() const; // Returns a position free of players
   void printScore() const;
+  void addEntity(EntityType type, const glm::vec2 &pos, const glm::vec2 &vel, const float &width, const float &height);
+  void processDestroyedEntities();
+  void deleteEntity(Entity* ent);
 
   KingPin::SpriteBatch _entitySpriteBatch;
   KingPin::SpriteBatch _spriteBatch;
@@ -56,7 +62,9 @@ private:
   std::vector<Asteroid *> _asteroids;
 
   std::vector<Bird*> _birds;
-  std::vector<Flock> _flocks;
+  Flock _flock;
+
+  std::vector<UFO*> _ufos;
 
   std::vector<Effect *> _effects;
 

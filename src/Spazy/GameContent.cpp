@@ -41,7 +41,7 @@ void GameContent::draw()
     _entities[i]->draw(_entitySpriteBatch);
   }
   for (auto &bird : _birds)
-    bird->draw( _entitySpriteBatch);
+    bird->draw(_entitySpriteBatch);
 
   _entitySpriteBatch.end();
   _entitySpriteBatch.renderBatch();
@@ -70,13 +70,14 @@ void GameContent::deleteContent()
   for (unsigned int i = 0; i < _entities.size(); ++i)
     delete _entities[i];
 
-  for (auto &bird : _birds)
+  for (auto &bird : _birds){
     delete bird;
+    _flock.deleteBird(bird);
+  }
 
   _players.clear();
   _entities.clear();
   _asteroids.clear();
-  _flocks.clear();
   _birds.clear();
 
   for (unsigned int i = 0; i < _effects.size(); ++i)
@@ -84,22 +85,114 @@ void GameContent::deleteContent()
 
   _effects.clear();
 }
+
+void GameContent::addEntity(EntityType type, const glm::vec2 &pos,
+                            const glm::vec2 &vel, const float &width,
+                            const float &height)
+{
+  switch (type)
+  {
+  case ASTEROID:
+  {
+    _asteroids.push_back(new Asteroid(pos, vel, width, height));
+    _entities.push_back(_asteroids.back());
+    break;
+  }
+  case BIRD:
+  {
+    _birds.push_back(new Bird(pos, vel, width, height));
+    _entities.push_back(_birds.back());
+    break;
+  }
+  case ENEMY:
+  {
+    _ufos.push_back(new UFO(pos, vel, width, height));
+    _entities.push_back(_ufos.back());
+    break;
+  }
+  default:
+    break;
+  }
+}
+
+void GameContent::processDestroyedEntities() {}
+
+void GameContent::deleteEntity(Entity *ent)
+{
+  EntityType type = ent->getEntityType();
+
+  delete ent;
+
+  for (int i = 0; i < _entities.size(); ++i)
+  {
+    if (_entities[i] == ent)
+    {
+      std::cout << "Erasing entity from _entities!\n";
+      _entities.erase(_entities.begin() + i);
+      break;
+    }
+  }
+
+  switch (type)
+  {
+  case ASTEROID:
+  {
+    for (int i = 0; i < _asteroids.size(); ++i)
+    {
+      if (_asteroids[i] == ent)
+      {
+        _asteroids.erase(_asteroids.begin() + i);
+        break;
+      }
+    }
+    break;
+  }
+  case BIRD:
+  {
+    for (int i = 0; i < _birds.size(); ++i)
+    {
+      if (_birds[i] == ent)
+      {
+        _birds.erase(_birds.begin() + i);
+        break;
+      }
+    }
+    _flock.deleteBird( (Bird*)ent);
+    break;
+  }
+  case ENEMY:
+  {
+    for (int i = 0; i < _ufos.size(); ++i)
+    {
+      if (_ufos[i] == ent)
+      {
+        _ufos.erase(_ufos.begin() + i);
+        break;
+      }
+    }
+    break;
+  }
+  default:
+  break;
+  }
+}
+
 void GameContent::update(float deltaTime)
 {
 
   // Temp fix:
-  std::vector<Entity*> killables;
+  std::vector<Entity *> killables;
   for (auto &ent : _entities)
     killables.push_back(ent);
   for (auto &bird : _birds)
-    killables.push_back( (Entity*)bird);
+    killables.push_back((Entity *)bird);
 
   // std::cout << "GameContent::update\n";
   // Checks if the player is colliding with the asteroids
   for (int i = 0; i < _players.size(); ++i)
   {
     _players[i]->update(deltaTime);
-    _players[i]->isKilling( killables);
+    _players[i]->isKilling(killables);
 
     if (_players[i]->isColliding(_entities))
     {
@@ -118,7 +211,8 @@ void GameContent::update(float deltaTime)
       addExplosion(_entities[i]->getPosition());
 
       // Adds small asteroids if it was a large one
-      if (_entities[i]->getSize().x >= 50.0f)
+      if (_entities[i]->getEntityType() == ASTEROID &&
+          _entities[i]->getSize().x >= 50.0f)
       {
         std::cout << "Adding small asteroids\n";
         static constexpr int nrAsteroids = 3;
@@ -127,15 +221,14 @@ void GameContent::update(float deltaTime)
             splitVecIntoSeveral(_entities[i]->getVelocity(), nrAsteroids);
         for (int j = 0; j < nrAsteroids; ++j)
         {
-          addAsteroid(_entities[i]->getPosition(), 30.0f);
-          std::cout << "Setting velocity\n";
-          _asteroids.back()->setVelocity(velVec[j]);
+          addAsteroid(_entities[i]->getPosition(), velVec[j], 30.0f);
         }
-        std::cout << "Done adding asteroids\n";
       }
-      std::cout << "Deleting asteroid\n";
-      delete _entities[i];
-      _entities.erase(_entities.begin() + i);
+
+      if (_entities[i]->getEntityType() != SPACESHIP)
+      {
+        deleteEntity(_entities[i]);
+      }
     }
   }
 
@@ -143,22 +236,19 @@ void GameContent::update(float deltaTime)
   for (auto &bird : _birds)
     bird->update(deltaTime);
 
-  for (auto &flock : _flocks)
-    flock.updateFlockBehavior(deltaTime);
+  
+  _flock.updateFlockBehavior(deltaTime);
 }
 
 void GameContent::addFlock(const int nrBirds)
 {
-  _flocks.emplace_back();
-
+  constexpr float BIRD_WIDTH = 30.;
   for (int i = 0; i < nrBirds; ++i)
   {
-    _birds.push_back(
-        new Bird(getFreePosition(), randUnit() * 10.0f * getUnitVec()));
-    _flocks.back().addBird(_birds.back());
+    addEntity(BIRD, getFreePosition(), randUnit() * 10.0f * getUnitVec(),
+              BIRD_WIDTH, BIRD_WIDTH);
+    _flock.addBird(_birds.back());
   }
-
-  // _flocks.back().setTarget( _players.back());
 }
 
 void GameContent::addGameOver()
@@ -208,7 +298,7 @@ void GameContent::addPlayer(int playerNr, KingPin::InputManager *inputManager)
 
 void GameContent::addRandomAsteroid(const float &radius)
 {
-  addAsteroid(getFreePosition(), radius);
+  addEntity(ASTEROID, getFreePosition(), getUnitVec(), radius, radius);
 }
 
 glm::vec2 GameContent::getFreePosition() const
@@ -232,11 +322,20 @@ glm::vec2 GameContent::getFreePosition() const
   return pos;
 }
 
-void GameContent::addAsteroid(const glm::vec2 &pos, const float &radius)
+void GameContent::addAsteroid(const glm::vec2 &pos, const glm::vec2 &vel,
+                              const float &radius)
 {
-  std::cout << "Adding asteroid\n";
-  _asteroids.push_back(new Asteroid(pos, radius));
-  _entities.push_back(_asteroids.back());
+  addEntity(ASTEROID, pos, vel, radius, radius);
+}
+
+void GameContent::addUFO()
+{
+  glm::vec2 pos = getFreePosition();
+  glm::vec2 vel = getUnitVec();
+  addEntity(ENEMY, pos, vel, 50., 50.);
+
+  if (_players.back() != nullptr)
+    _ufos.back()->setTarget((Entity *)_players.back());
 }
 
 void GameContent::addExplosion(const glm::vec2 pos)

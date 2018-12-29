@@ -116,8 +116,12 @@ void Spazy::startLevel(unsigned int level) {
     _gameContent.addRandomAsteroid(100.0f);
   }
 
+_gameContent.addUFO();
+
+
   // Temp add of flock
-  _gameContent.addFlock(10);
+  // if ( level % 2 == 0)
+  _gameContent.addFlock(12);
 }
 
 void Spazy::addPlayers() {

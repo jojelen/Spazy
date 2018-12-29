@@ -13,7 +13,7 @@ class Flock
 
   void addBird( Bird* bird);
   void addBirds( std::vector<Bird*> birds);
-
+  void deleteBird(Bird* bird);
   void updateFlockBehavior( float deltaTime);
 
   void setTarget(Entity *target);

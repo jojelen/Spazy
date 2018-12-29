@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 
 enum EntityType {
-  ASTEROID, SPACESHIP, UNKNOWN, BIRD
+  ASTEROID, SPACESHIP, UNKNOWN, BIRD, ENEMY
 };
 
 enum EntityStatus {

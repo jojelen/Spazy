@@ -9,6 +9,15 @@ Flock::~Flock() {}
 
 void Flock::addBird(Bird *bird) { _birds.push_back(bird); }
 
+void Flock::deleteBird(Bird* bird)
+{
+  for (int i=0; i < _birds.size(); ++i)
+  {
+    if (bird == _birds[i])
+      _birds.erase(_birds.begin() + i);
+  }
+}
+
 void Flock::updateFlockBehavior(float deltaTime)
 {
   align();
