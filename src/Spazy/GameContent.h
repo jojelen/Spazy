@@ -45,6 +45,7 @@ public:
   void addFlock(const int nrBirds);
 
   int getNumPlayers();   // Returns the number of players that are alive
+  int getNumEntities();  // Returns number of non-player entities.
   int getNumAsteroids(); // Returns the number of asteroids
 
 private:

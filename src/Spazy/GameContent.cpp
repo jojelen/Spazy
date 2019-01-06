@@ -61,6 +61,15 @@ void GameContent::draw()
   _popBatch.renderBatch();
 }
 
+int GameContent::getNumEntities()
+{
+  int ents = 0;
+  ents += _asteroids.size();
+  ents += _ufos.size();
+  ents += _birds.size();
+  return ents;
+}
+
 int GameContent::getNumAsteroids() { return _asteroids.size(); }
 
 void GameContent::deleteContent()
