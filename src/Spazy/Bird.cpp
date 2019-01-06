@@ -29,6 +29,7 @@ Bird::~Bird()
 {
 }
 
+
 void Bird::update(float deltaTime)
 {
   if (glm::length(_velocity) > _maxSpeed)
@@ -43,3 +44,5 @@ void Bird::update(float deltaTime)
 }
 
 void Bird::drawEffects(KingPin::SpriteBatch &spriteBatch) {}
+void Bird::interactWith(std::vector<Entity*> &entities)
+{}

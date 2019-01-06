@@ -65,13 +65,13 @@ int GameContent::getNumAsteroids() { return _asteroids.size(); }
 
 void GameContent::deleteContent()
 {
-  // std::cout << "GameContent: deleteContent():\n";
+  std::cout << "GameContent: deleteContent():\n";
 
   for (unsigned int i = 0; i < _entities.size(); ++i)
     delete _entities[i];
 
-  for (auto &bird : _birds){
-    delete bird;
+  for (auto &bird : _birds)
+  {
     _flock.deleteBird(bird);
   }
 
@@ -84,6 +84,8 @@ void GameContent::deleteContent()
     delete _effects[i];
 
   _effects.clear();
+
+  std::cout << "Finished deleting content!\n";
 }
 
 void GameContent::addEntity(EntityType type, const glm::vec2 &pos,
@@ -114,8 +116,6 @@ void GameContent::addEntity(EntityType type, const glm::vec2 &pos,
     break;
   }
 }
-
-void GameContent::processDestroyedEntities() {}
 
 void GameContent::deleteEntity(Entity *ent)
 {
@@ -157,7 +157,7 @@ void GameContent::deleteEntity(Entity *ent)
         break;
       }
     }
-    _flock.deleteBird( (Bird*)ent);
+    _flock.deleteBird((Bird *)ent);
     break;
   }
   case ENEMY:
@@ -173,38 +173,37 @@ void GameContent::deleteEntity(Entity *ent)
     break;
   }
   default:
-  break;
+    break;
   }
 }
 
-void GameContent::update(float deltaTime)
+void GameContent::update(const float &deltaTime)
 {
+  updatePlayers(deltaTime);
+  updateEntities(deltaTime);
+}
 
-  // Temp fix:
-  std::vector<Entity *> killables;
-  for (auto &ent : _entities)
-    killables.push_back(ent);
-  for (auto &bird : _birds)
-    killables.push_back((Entity *)bird);
-
-  // std::cout << "GameContent::update\n";
-  // Checks if the player is colliding with the asteroids
+void GameContent::updatePlayers(const float &deltaTime)
+{
   for (int i = 0; i < _players.size(); ++i)
   {
     _players[i]->update(deltaTime);
-    _players[i]->isKilling(killables);
+    _players[i]->interactWith(_entities);
 
+    // Checks if the player is colliding with the asteroids
     if (_players[i]->isColliding(_entities))
     {
       addExplosion(_players[i]->getPosition());
+      _players[i]->setVelocity(glm::vec2(0., 0.));
     }
   }
+}
 
-  // Update entities
+void GameContent::updateEntities(const float &deltaTime)
+{
   // Also checks for destroyed entities and adds explosions.
   for (int i = _players.size(); i < _entities.size(); ++i)
   {
-    _entities[i]->update(deltaTime);
     if (_entities[i]->getEntityStatus() == DESTROYED)
     {
       std::cout << "Adding explosion\n"; // DEBUG
@@ -216,6 +215,7 @@ void GameContent::update(float deltaTime)
       {
         std::cout << "Adding small asteroids\n";
         static constexpr int nrAsteroids = 3;
+
         // Splits up the velocity of the asteroid into several ones
         std::vector<glm::vec2> velVec =
             splitVecIntoSeveral(_entities[i]->getVelocity(), nrAsteroids);
@@ -225,18 +225,15 @@ void GameContent::update(float deltaTime)
         }
       }
 
-      if (_entities[i]->getEntityType() != SPACESHIP)
-      {
-        deleteEntity(_entities[i]);
-      }
+      deleteEntity(_entities[i]);
+    }
+    else
+    {
+      _entities[i]->interactWith(_entities);
+      _entities[i]->update(deltaTime);
     }
   }
 
-  // Updating birds
-  for (auto &bird : _birds)
-    bird->update(deltaTime);
-
-  
   _flock.updateFlockBehavior(deltaTime);
 }
 

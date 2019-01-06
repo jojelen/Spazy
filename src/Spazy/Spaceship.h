@@ -29,12 +29,17 @@ public:
   void update(float deltaTime);
   void drawEffects(KingPin::SpriteBatch &spriteBatch) override;
 
-  void isKilling(std::vector<Entity*> &entities);
-  bool isColliding(std::vector<Entity *> &entities);
+  void interactWith(std::vector<Entity*> &entities) override;
+  // Returns true if it gets destroyed.
+  bool isColliding(std::vector<Entity *> &entities); 
 
   int getScore();
 
 private:
+  void shoot();
+  void updateEffects( const float &deltaTime);
+  void isKilling(std::vector<Entity*> &entities);
+
   std::vector<Laser> _lasers;
   int _gunReload;
   int _score;

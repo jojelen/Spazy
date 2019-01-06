@@ -9,6 +9,6 @@ public:
   ~Asteroid();
 
   void update(float deltaTime);
-
+  void interactWith(std::vector<Entity*> &entities) override;
   void drawEffects(KingPin::SpriteBatch &spriteBatch) override;
 };

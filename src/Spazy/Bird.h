@@ -9,6 +9,7 @@ class Bird : public Entity
   ~Bird();
 
   void update(float deltaTime) override;
+  void interactWith(std::vector<Entity*> &entities) override;
   void drawEffects(KingPin::SpriteBatch &spriteBatch) override;
   private:
 

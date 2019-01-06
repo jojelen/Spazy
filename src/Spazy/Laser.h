@@ -26,7 +26,8 @@ public:
 
   // Sets the color of the laser and changes _textureID if necessary
   void setColor(const COLOR color);
-
+  void setImmuneTarget(Entity* ent);
+  
 private:
   int _lifeTime;
   int _textureID;
@@ -35,6 +36,8 @@ private:
   float _angle;
   glm::vec2 _direction;
   glm::vec2 _position;
+  
+  Entity* _immuneTarget;
 
   COLOR _color;
 

@@ -14,7 +14,6 @@ Asteroid::Asteroid( const glm::vec2 &pos, const glm::vec2 &vel, const float &wid
   _textureID =
   KingPin::ResourceManager::getTexture("src/Spazy/res/textures/asteroid.png").id;
 
-  // Set position
   _position = pos;
   _velocity = vel;
   _mass = 1000.0f;
@@ -39,5 +38,6 @@ void Asteroid::update(float deltaTime)
     _textureID =
   KingPin::ResourceManager::getTexture("src/Spazy/res/textures/asteroidDamaged.png").id;
 }
-
+void Asteroid::interactWith(std::vector<Entity*> &entities)
+{}
 void Asteroid::drawEffects(KingPin::SpriteBatch &spriteBatch) {}

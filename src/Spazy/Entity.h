@@ -18,6 +18,7 @@ public:
   virtual ~Entity();
 
   virtual void update(float deltaTime) = 0;
+  virtual void interactWith(std::vector<Entity*> &entities) = 0;
 
   void applyForce(glm::vec2 force, const float maxForce = -1.0f);
 

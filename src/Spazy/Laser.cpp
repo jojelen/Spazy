@@ -4,13 +4,12 @@
 
 Laser::Laser(const glm::vec2 &pos, const glm::vec2 &dir, const float &speed,
              const int &lifeTime, const COLOR &color)
-    : _lifeTime(lifeTime), _position(pos), _direction(dir),  _speed(speed), _mass(20.f),
+    : _lifeTime(lifeTime), _position(pos), _direction(dir),  _speed(speed), _mass(20.f), _immuneTarget(nullptr),
       _color(color)
 {
-  _angle = atan(dir.y / dir.x);
-  _angle += 1.577;
+  _angle = atan(dir.y / dir.x) + 1.577;
   if (dir.x < 0)
-    _angle += 3.1415;
+    _angle += M_PI;
 
   switch (_color)
   {
@@ -30,6 +29,11 @@ Laser::Laser(const glm::vec2 &pos, const glm::vec2 &dir, const float &speed,
 }
 
 Laser::~Laser() {}
+
+void Laser::setImmuneTarget(Entity* ent)
+{
+  _immuneTarget = ent;
+}
 
 void Laser::draw(KingPin::SpriteBatch &spriteBatch)
 {
@@ -80,9 +84,9 @@ bool Laser::isColliding(std::vector<Entity *> &entities)
 {
   glm::vec2 momentum = _mass * _direction * _speed;
 
-  for (int i = 1; i < entities.size(); i++)
+  for (int i = 0; i < entities.size(); i++)
   {
-    if (entities[i]->getEntityType() != SPACESHIP)
+    if (entities[i] != _immuneTarget)
     {
       glm::vec2 entitySize = entities[i]->getSize();
       float radie = entitySize.x > entitySize.y ? entitySize.x : entitySize.y;
@@ -91,9 +95,8 @@ bool Laser::isColliding(std::vector<Entity *> &entities)
 
       if (distance < radie)
       {
-        // delete entities[i];
-        // entities.erase(entities.begin() + i);
         entities[i]->projectileHit(momentum, 1.);
+        printf("Hitting target!\n");
         _lifeTime = 0;
         return true;
       }

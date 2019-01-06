@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entity.h"
+#include "Laser.h"
 
 class UFO : public Entity
 {
@@ -9,6 +10,7 @@ public:
   ~UFO();
 
   void update(float deltaTime);
+  void interactWith(std::vector<Entity*> &entities) override;
 
   void setTarget(Entity* target);
 
@@ -16,9 +18,16 @@ public:
 private:
 
   void steer();
+  void updateEffects(const float &deltaTime);
+  void shoot();
+  glm::vec2 getTargetDirection() const;
 
   float _steerForce;
   float _engineSpeed;
+
+  int _reloadTime;
+  std::vector<Laser> _lasers;
+
 
   Entity* _target;
 };

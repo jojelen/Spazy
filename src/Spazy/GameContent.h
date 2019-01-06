@@ -27,7 +27,7 @@ public:
   //      collisions with other entities.
   //  2.) Updates other entities: checks DESTROYED status and deletes the
   //      entity and adds an explosion if so.
-  void update(float deltaTime);
+  void update(const float &deltaTime);
 
   void draw(); // Calls effects and entities draw functions
 
@@ -48,10 +48,16 @@ public:
   int getNumAsteroids(); // Returns the number of asteroids
 
 private:
+  void updatePlayers(const float &deltaTime);
+  void updateEntities(const float &deltaTime);
+
   glm::vec2 getFreePosition() const; // Returns a position free of players
+
   void printScore() const;
+
+  // Handles the pointers to entities, i.e. new and delete.
+  // deleteEntity also erases the pointer in the respective vector.
   void addEntity(EntityType type, const glm::vec2 &pos, const glm::vec2 &vel, const float &width, const float &height);
-  void processDestroyedEntities();
   void deleteEntity(Entity* ent);
 
   KingPin::SpriteBatch _entitySpriteBatch;
@@ -70,6 +76,5 @@ private:
 
   std::vector<Spaceship *> _players;
 
-  // For adding content within frame
-  float _screenWidth, _screenHeight;
+  float _screenWidth, _screenHeight; // For adding content within frame
 };
