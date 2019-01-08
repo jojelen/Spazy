@@ -38,8 +38,7 @@ private:
   void initSystems();
   void initShaders();
 
-  /// Main game loop for the program
-  void gameLoop();
+  void gameLoop(); /// Main game loop for the program
 
   void processInput();
   void drawGame();
@@ -48,7 +47,6 @@ private:
 
   void startLevel(unsigned int level);
   
-
 private:
   /// Member Variables
   KingPin::Window _window;              // The game window

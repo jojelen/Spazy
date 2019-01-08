@@ -64,7 +64,6 @@ void UFO::updateEffects(const float &deltaTime)
 
 void UFO::shoot()
 {
-  if (_target != nullptr && _target->getEntityStatus() != DESTROYED)
   if (_reloadTime == 0)
   {
     _lasers.emplace_back(_position,
@@ -88,8 +87,24 @@ void UFO::interactWith(std::vector<Entity *> &entities)
 
 glm::vec2 UFO::getTargetDirection() const
 {
-  glm::vec2 direction = _target->getPosition() - getPosition();
-  direction = glm::normalize(direction);
+  glm::vec2 direction;
+  if ( !_targets.empty()){
+    direction = _targets.back()->getPosition() - getPosition();
+    for (unsigned int i = 0;  i < _targets.size() -1; ++i)
+    {
+      if ( _targets[i]->getEntityStatus() != DESTROYED)
+      { 
+        glm::vec2 targetVec = _targets[i]->getPosition() - getPosition();
+        if (glm::length(targetVec) < glm::length(direction))
+          direction = targetVec;
+      }
+    }
+
+    direction = glm::normalize(direction);  
+  }
+  else
+    direction = getUnitVec();
+
   return direction;
 }
 
@@ -107,7 +122,7 @@ void UFO::steer()
     setSpeed(_engineSpeed);
 }
 
-void UFO::setTarget(Entity *target) { _target = target; }
+void UFO::setTarget(Entity *target) { _targets.push_back(target); }
 
 void UFO::drawEffects(KingPin::SpriteBatch &spriteBatch)
 {

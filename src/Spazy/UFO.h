@@ -29,5 +29,5 @@ private:
   std::vector<Laser> _lasers;
 
 
-  Entity* _target;
+  std::vector<Entity*> _targets;
 };

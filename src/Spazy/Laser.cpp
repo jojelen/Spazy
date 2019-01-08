@@ -96,7 +96,7 @@ bool Laser::isColliding(std::vector<Entity *> &entities)
       if (distance < radie)
       {
         entities[i]->projectileHit(momentum, 1.);
-        printf("Hitting target!\n");
+        // printf("Hitting target!\n"); // DEBUG
         _lifeTime = 0;
         return true;
       }

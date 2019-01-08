@@ -58,7 +58,7 @@ void Entity::setSize(float width, float height) {
 }
 
 void Entity::projectileHit(glm::vec2 momentum, float power) {
-  printVecInfo("vel before hit", _velocity); // DEBUG
+  // printVecInfo("vel before hit", _velocity); // DEBUG
   momentum /= _mass;
   _velocity += momentum;
 
@@ -67,7 +67,7 @@ void Entity::projectileHit(glm::vec2 momentum, float power) {
   {
     _entityStatus = DESTROYED;
   }
-  printVecInfo("vel after hit", _velocity); // DEBUG
+  // printVecInfo("vel after hit", _velocity); // DEBUG
 }
 
 void Entity::applyForce( glm::vec2 force, const float maxForce)

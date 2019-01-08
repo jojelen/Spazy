@@ -27,6 +27,7 @@ void Spazy::menu()
     std::cout << "Menu:\n";
     std::cout << " 1. 1 player\n";
     std::cout << " 2. 2 players\n";
+    std::cout << " 3. Testing ground\n";
     std::cout << " 0. Quit\n";
 
     std::cout << "Choice: ";
@@ -40,6 +41,10 @@ void Spazy::menu()
         run();
         break;
       case 2:
+        run(2);
+        break;
+      case 3:
+        std::cout << "Not implemented yet :(\n";
         run(2);
         break;
       case 0:
@@ -130,7 +135,7 @@ void Spazy::startLevel(unsigned int level)
     _gameContent.addRandomAsteroid(100.0f);
   }
 
-  if (level % 3 == 0)
+  // if (level % 3 == 0)
     _gameContent.addUFO();
 
   // Temp add of flock
@@ -242,17 +247,17 @@ void Spazy::processInput()
   //   _camera.setScale(_camera.getScale() - SCALE_SPEED);
   // }
 
-  if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT))
-  {
-    glm::vec2 mouseCoords = _inputManager.getMouseCoords();
-    glm::vec2 worldCoords =
-        _camera.convertScreenToWorld(_inputManager.getMouseCoords());
+  // if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT))
+  // {
+  //   glm::vec2 mouseCoords = _inputManager.getMouseCoords();
+  //   glm::vec2 worldCoords =
+  //       _camera.convertScreenToWorld(_inputManager.getMouseCoords());
 
-    std::cout << "Mouse coords: " << mouseCoords.x << " " << mouseCoords.y
-              << std::endl;
-    // std::cout<< "World coords: " << worldCoords.x << " " << worldCoords.y <<
-    // std::endl;
-  }
+  //   std::cout << "Mouse coords: " << mouseCoords.x << " " << mouseCoords.y
+  //             << std::endl;
+  //   // std::cout<< "World coords: " << worldCoords.x << " " << worldCoords.y <<
+  //   // std::endl;
+  // }
 }
 
 void Spazy::printScore() const { printf("Score: %i\n", _score); }
@@ -269,7 +274,7 @@ void Spazy::updateDynamicalContent(float deltaTime)
   // Start new level if there are no asteroids left
   if (_gameContent.getNumEntities() == 0)
   {
-    std::cout << "Starting level " << _currentLevel + 1 << std::endl; // DEBUG
+    std::cout << "\nStarting level " << _currentLevel + 1 << std::endl; // DEBUG
     startLevel(++_currentLevel);
   }
   _camera.update();

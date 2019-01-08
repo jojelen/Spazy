@@ -32,16 +32,11 @@ public:
   void draw(); // Calls effects and entities draw functions
 
   void addGameOver(); // Adds a GAME OVER pop up sign
-
   void addPlayer(int playerNr, KingPin::InputManager *inputManager);
-
   void addRandomAsteroid(const float &radius);
   void addAsteroid(const glm::vec2 &pos,const glm::vec2 &vel, const float &radius);
-
   void addUFO();
-
   void addExplosion(const glm::vec2 pos);
-
   void addFlock(const int nrBirds);
 
   int getNumPlayers();   // Returns the number of players that are alive
