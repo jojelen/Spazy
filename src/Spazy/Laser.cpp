@@ -86,7 +86,7 @@ bool Laser::isColliding(std::vector<Entity *> &entities)
 
   for (int i = 0; i < entities.size(); i++)
   {
-    if (entities[i] != _immuneTarget)
+    if (entities[i] != _immuneTarget && entities[i]->getEntityStatus() != DESTROYED)
     {
       glm::vec2 entitySize = entities[i]->getSize();
       float radie = entitySize.x > entitySize.y ? entitySize.x : entitySize.y;
