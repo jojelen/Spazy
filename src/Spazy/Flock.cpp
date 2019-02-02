@@ -2,6 +2,7 @@
 #include "HelpFunctions.h"
 
 #include <glm/glm.hpp>
+#include <algorithm>
 
 Flock::Flock() : _target(nullptr) {}
 
@@ -11,11 +12,9 @@ void Flock::addBird(Bird *bird) { _birds.push_back(bird); }
 
 void Flock::deleteBird(Bird* bird)
 {
-  for (int i=0; i < _birds.size(); ++i)
-  {
-    if (bird == _birds[i])
-      _birds.erase(_birds.begin() + i);
-  }
+  std::vector<Bird*>::iterator it = std::find(_birds.begin(),_birds.end(), bird);
+  if ( it != _birds.end())
+    _birds.erase(it);
 }
 
 void Flock::updateFlockBehavior(float deltaTime)

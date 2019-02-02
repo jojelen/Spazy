@@ -42,8 +42,9 @@ int Window::create(std::string windowName, int &screenWidth, int &screenHeight,
   }
 
 
-  SDL_GLContext glContext = SDL_GL_CreateContext(_sdlWindow);
-  if (glContext == nullptr)
+  // SDL_GLContext glContext = SDL_GL_CreateContext(_sdlWindow);
+  _glContext = SDL_GL_CreateContext(_sdlWindow);
+  if (_glContext == nullptr)
   {
     std::string errorMessage = SDL_GetError();
     fatalError("SDL_GL context could not be created: " + errorMessage);
@@ -71,9 +72,15 @@ int Window::create(std::string windowName, int &screenWidth, int &screenHeight,
   // Sets the blending settings
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+  _imgui.init(_sdlWindow, &_glContext);
+
   return 0;
 }
 
-void Window::swapBuffer() { SDL_GL_SwapWindow(_sdlWindow); }
+void Window::showGui()
+{
+_imgui.show();
+}
+void Window::swapBuffer() {  SDL_GL_SwapWindow(_sdlWindow); }
 
 } // namespace KingPin

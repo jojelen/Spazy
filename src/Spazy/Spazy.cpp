@@ -289,10 +289,14 @@ void Spazy::drawGame()
   // Clear the color and depth buffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  
+  
+
   _textureProgram.use();
   // Use texture unit 0
   glActiveTexture(GL_TEXTURE0);
 
+  
   //----------------------------------------------------------------------------
 
   GLint textureUniform = _textureProgram.getUniformLocation("mySampler");
@@ -311,7 +315,7 @@ void Spazy::drawGame()
   //----------------------------------------------------------------------------
 
   _textureProgram.unuse();
-
+  _window.showGui();
   // Swap our buffer and draw everything to the screen!
   _window.swapBuffer();
 }

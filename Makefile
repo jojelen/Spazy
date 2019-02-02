@@ -6,10 +6,10 @@
 CC = g++
 
 #Optimisation level, eg: -O3
-OPT=-O2
+OPT=-O3
 
 # Source code 
-VPATH=src/KingPin src/Spazy src
+VPATH=src/KingPin src/Spazy src dep/imgui
 
 # New folders to be created
 MKDIR_P = mkdir -p
@@ -22,16 +22,22 @@ OBJDIR=lib/obj
 LIBDIR=lib
 
 KINGPINSRC=$(subst src/KingPin/, , $(wildcard src/KingPin/*.cpp))
+# IMGUI
+# The following three lines implements the ImGui source files
+KINGPINSRC+=$(subst dep/imgui/, , $(wildcard dep/imgui/*.cpp))
+CFLAGS+=-Idep/imgui -DIMGUI_IMPL_OPENGL_LOADER_GLEW `sdl2-config --cflags`
+LDFLAGS+=-lGL -ldl `sdl2-config --libs`
+
 KINGPINOBJ=$(KINGPINSRC:.cpp=.o)
 
 SPAZYSRC=$(subst src/Spazy/, , $(wildcard src/Spazy/*.cpp))
 SPAZYOBJ:=$(SPAZYSRC:.cpp=.o)
 
 #LDFLAGS is used for programs using created library in lib.
-LDFLAGS+= -L/usr/lib64 -L$(LIBDIR) -lGLU -lGL -lglut -lSDL2main -lSDL2 -lglfw3 -lGLEW
+LDFLAGS+=-L/usr/lib64 -L$(LIBDIR) -lGLU -lGL -lglut -lSDL2main -lSDL2 -lglfw3 -lGLEW
 
 LIBS=libSpazy.a libKingPin.a 
-PROG=main
+PROG=main sandbox
 
 .PHONY: kingpin spazy clean distclean
 
@@ -47,24 +53,20 @@ $(NEWFOLDERS):
 $(OBJDIR)/%.o : %.cpp %.h
 	$(CC) -c $< $(CFLAGS) -o $@
 
-kingpin: $(addprefix $(LIBDIR)/, libKingPin.a) 
+kingpin: $(addprefix $(LIBDIR)/, libKingPin.a)
 
 $(addprefix $(LIBDIR)/, libKingPin.a): $(addprefix $(OBJDIR)/, $(KINGPINOBJ)) 
 	@ echo "Making KingPin library in $@"
 	@ ar rcs $@ $(addprefix $(OBJDIR)/, $(KINGPINOBJ)) 
 
-spacex: $(addprefix $(LIBDIR)/, libSpaceX.a)
+spazy: $(addprefix $(LIBDIR)/, libSpazy.a)
 
 $(addprefix $(LIBDIR)/, libSpazy.a): $(addprefix $(OBJDIR)/, $(SPAZYOBJ))
 	@ echo "Making Spazy library in $@"
 	@ ar rcs $@ $(addprefix $(OBJDIR)/, $(SPAZYOBJ))
 
-# $(addprefix $(LIBDIR)/, $(LIB)): $(addprefix $(OBJDIR)/, $(OBJECTS))
-# 	@ echo "Making library $@..."
-# 	@ ar rcs $@ $(addprefix $(OBJDIR)/, $(OBJECTS))  
-
 %: %.cpp $(addprefix $(LIBDIR)/, $(LIBS))
-	$(CC) $(CFLAGS) $< $(addprefix $(LIBDIR)/, $(LIBS)) $(LDFLAGS) -o $@
+	$(CC) $< $(CFLAGS) $(addprefix $(LIBDIR)/, $(LIBS)) $(LDFLAGS) -o $@
 
 clean:
 	@ echo "Cleaning library"

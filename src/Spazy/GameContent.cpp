@@ -2,6 +2,7 @@
 #include "Bird.h"
 #include "HelpFunctions.h"
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 
@@ -132,53 +133,36 @@ void GameContent::deleteEntity(Entity *ent)
 
   delete ent;
 
-  for (int i = 0; i < _entities.size(); ++i)
-  {
-    if (_entities[i] == ent)
-    {
-      std::cout << "Erasing entity from _entities!\n";
-      _entities.erase(_entities.begin() + i);
-      break;
-    }
-  }
+  std::vector<Entity *>::iterator it =
+      std::find(_entities.begin(), _entities.end(), ent);
+  if (it != _entities.end())
+    _entities.erase(it);
 
   switch (type)
   {
   case ASTEROID:
   {
-    for (int i = 0; i < _asteroids.size(); ++i)
-    {
-      if (_asteroids[i] == ent)
-      {
-        _asteroids.erase(_asteroids.begin() + i);
-        break;
-      }
-    }
+    std::vector<Asteroid *>::iterator it =
+        std::find(_asteroids.begin(), _asteroids.end(), ent);
+    if (it != _asteroids.end())
+      _asteroids.erase(it);
     break;
   }
   case BIRD:
   {
-    for (int i = 0; i < _birds.size(); ++i)
-    {
-      if (_birds[i] == ent)
-      {
-        _birds.erase(_birds.begin() + i);
-        break;
-      }
-    }
+    std::vector<Bird *>::iterator it =
+        std::find(_birds.begin(), _birds.end(), ent);
+    if (it != _birds.end())
+      _birds.erase(it);
     _flock.deleteBird((Bird *)ent);
     break;
   }
   case ENEMY:
   {
-    for (int i = 0; i < _ufos.size(); ++i)
-    {
-      if (_ufos[i] == ent)
-      {
-        _ufos.erase(_ufos.begin() + i);
-        break;
-      }
-    }
+    std::vector<UFO *>::iterator it =
+        std::find(_ufos.begin(), _ufos.end(), ent);
+    if (it != _ufos.end())
+      _ufos.erase(it);
     break;
   }
   default:
@@ -304,7 +288,6 @@ void GameContent::addPlayer(int playerNr, KingPin::InputManager *inputManager)
     if (_players[playerNr - 1]->getSpeed() > 0.1)
       _players[playerNr - 1]->setSpeed(0.f);
   }
-
 }
 
 void GameContent::addRandomAsteroid(const float &radius)

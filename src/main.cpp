@@ -4,8 +4,6 @@
 
 int main(int argc, char **argv)
 {
-
   Spazy mainGame;
   mainGame.menu();
 }
-
