@@ -16,8 +16,9 @@
 
 enum class GameState
 {
-  PLAY,
   MENU,
+  SINGLE_PLAYER,
+  TWO_PLAYER,
   QUIT
 };
 
@@ -27,7 +28,7 @@ public:
   Spazy();
   ~Spazy();
 
-  void menu();
+  void start();
 
 private:
   
@@ -38,6 +39,7 @@ private:
   void initSystems();
   void initShaders();
 
+  void menuLoop();
   void gameLoop(); /// Main game loop for the program
 
   void processInput();

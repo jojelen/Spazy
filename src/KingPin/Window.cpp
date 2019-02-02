@@ -81,6 +81,12 @@ void Window::showGui()
 {
 _imgui.show();
 }
+
+void Window::addGuiWindow(std::unique_ptr<GuiWindow> &window)
+{
+  _imgui.addWindow(window);
+}
+
 void Window::swapBuffer() {  SDL_GL_SwapWindow(_sdlWindow); }
 
 } // namespace KingPin

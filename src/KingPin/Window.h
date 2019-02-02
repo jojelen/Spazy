@@ -30,6 +30,8 @@ public:
   int getScreenWidth() { _screenWidth; };
   int getScreenHeight() { _screenHeight; };
 
+  void addGuiWindow(std::unique_ptr<GuiWindow> &window);
+
 private:
   int _screenWidth, _screenHeight;
   SDL_Window *_sdlWindow;
