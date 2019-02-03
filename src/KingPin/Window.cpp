@@ -82,6 +82,11 @@ void Window::showGui()
 _imgui.show();
 }
 
+void Window::clearGui()
+{
+  _imgui.clearGui();
+}
+
 void Window::addGuiWindow(std::unique_ptr<GuiWindow> &window)
 {
   _imgui.addWindow(window);

@@ -115,6 +115,8 @@ void Spazy::clearGameContent()
 {
 
   _currentLevel = 1;
+  _window.clearGui();
+  addEssentialGui();
   _gameContent.deleteContent();
 }
 
@@ -142,23 +144,29 @@ void Spazy::initSystems()
     _camera.init(_screenWidth, _screenHeight);
     _windowInitialized = true;
 
-    std::unique_ptr<KingPin::GuiWindow> fps(new FpsCounter());
-    _window.addGuiWindow(fps);
-
-    std::unique_ptr<KingPin::GuiWindow> menu(new Menu(&_gamestate));
-    _window.addGuiWindow(menu);
+    addEssentialGui();
   }
 
   std::cout << "Initializing World!\n"; // DEBUG
   _world.init();                        // Initialize the world background
 }
 
+void Spazy::addEssentialGui()
+{std::unique_ptr<KingPin::GuiWindow> fps(new FpsCounter());
+    _window.addGuiWindow(fps);
+
+    std::unique_ptr<KingPin::GuiWindow> level(new LevelCounter(&_currentLevel));
+    _window.addGuiWindow(level);
+
+    std::unique_ptr<KingPin::GuiWindow> menu(new Menu(&_gamestate));
+    _window.addGuiWindow(menu);}
+
 void Spazy::startLevel(unsigned int level)
 {
 
   // Resets the players to FINE status
   for (int i = 1; i <= _numPlayers; ++i)
-    _gameContent.addPlayer(i, &_inputManager);
+    _gameContent.addPlayer(i, &_inputManager, &_window);
 
   // Adds content of level
   for (int i = 0; i < level; ++i)
@@ -179,7 +187,9 @@ void Spazy::addPlayers()
   std::cout << "Initializing Players!\n"; // DEBUG
   // Initialize player spaceship
   for (int i = 1; i <= _numPlayers; ++i)
-    _gameContent.addPlayer(i, &_inputManager);
+    _gameContent.addPlayer(i, &_inputManager, &_window);
+
+  // _gameContent.addGui(&_window);
 }
 
 void Spazy::initShaders()

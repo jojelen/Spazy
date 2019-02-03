@@ -1,9 +1,11 @@
 #include "GameContent.h"
 #include "Bird.h"
+#include "GuiFeatures.h"
 #include "HelpFunctions.h"
 
 #include <algorithm>
 #include <iostream>
+#include <memory>
 #include <string>
 
 GameContent::GameContent() {}
@@ -60,6 +62,15 @@ void GameContent::draw()
   }
   _popBatch.end();
   _popBatch.renderBatch();
+}
+
+void GameContent::addGui(KingPin::Window *window)
+{
+  // for (auto player : _players)
+  // {
+  //   std::unique_ptr<KingPin::GuiWindow> playerInfo(new PlayerInfo(player));
+  //   window->addGuiWindow(playerInfo);
+  // }
 }
 
 int GameContent::getNumEntities()
@@ -247,7 +258,8 @@ void GameContent::addGameOver()
       (Effect *)new PopUp(glm::vec2(0.0f, 0.0f), 1000, gameOver));
 }
 
-void GameContent::addPlayer(int playerNr, KingPin::InputManager *inputManager)
+void GameContent::addPlayer(int playerNr, KingPin::InputManager *inputManager,
+                            KingPin::Window *window)
 {
   // Creates a new player if that one doesn't exists, otherwise sets its status
   // to FINE.
@@ -261,6 +273,13 @@ void GameContent::addPlayer(int playerNr, KingPin::InputManager *inputManager)
     _players.push_back(new Spaceship(playerNr));
     _players.back()->init(0.0f, position, *inputManager);
     _players.back()->setSize(50.0f, 50.0f);
+
+    if (window != nullptr)
+    {
+      std::unique_ptr<KingPin::GuiWindow> playerInfo(
+          new PlayerInfo(_players.back()));
+      window->addGuiWindow(playerInfo);
+    }
 
     switch (playerNr)
     {
@@ -285,6 +304,7 @@ void GameContent::addPlayer(int playerNr, KingPin::InputManager *inputManager)
   else if (_players[playerNr - 1]->getEntityStatus() == DESTROYED)
   {
     _players[playerNr - 1]->setEntityStatus(FINE);
+    _players[playerNr - 1]->setLife(_players[playerNr - 1]->getMaxLife());
     if (_players[playerNr - 1]->getSpeed() > 0.1)
       _players[playerNr - 1]->setSpeed(0.f);
   }

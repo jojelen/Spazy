@@ -33,8 +33,10 @@ public:
   // Returns true if it gets destroyed.
   bool isColliding(std::vector<Entity *> &entities); 
 
-  int getScore();
-
+  void addScore(int score);
+  int getScore() const;
+  int getPlayerNr() const;
+  float getMaxLife() const;
 private:
   void shoot();
   void updateEffects( const float &deltaTime);
@@ -44,6 +46,7 @@ private:
   int _gunReload;
   int _score;
 
+  float _maxLife;
   int _playerNr;
 
   KingPin::InputManager *_inputManager;

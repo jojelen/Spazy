@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Entity.h"
+
 #include <glm/glm.hpp>
 #include <vector>
 #include <string>
@@ -11,3 +13,5 @@ glm::vec2 getUnitVec();
 float randUnit();
 
 void printVecInfo(const std::string &name, const glm::vec2 &vec);
+
+int calcScore(EntityType type);

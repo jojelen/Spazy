@@ -15,6 +15,18 @@ class Menu : public KingPin::GuiWindow
     GameState *_gameState;
 };
 
+class LevelCounter : public KingPin::GuiWindow
+{
+  public:
+  LevelCounter(int* level);
+  ~LevelCounter();
+
+  void show() override;
+
+  private:
+  int *_level;
+};
+
 class FpsCounter : public KingPin::GuiWindow
 {
   public:
@@ -22,4 +34,16 @@ class FpsCounter : public KingPin::GuiWindow
   ~FpsCounter();
 
   void show() override;
+};
+
+class PlayerInfo : public KingPin::GuiWindow
+{
+  public:
+  PlayerInfo(Spaceship* player);
+  ~PlayerInfo();
+
+  void show() override;
+
+  private:
+    Spaceship* _player;
 };

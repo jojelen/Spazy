@@ -56,6 +56,7 @@ private:
   KingPin::InputManager _inputManager;  // Handles input
   KingPin::Camera2D _camera;            // Main Camera
 
+  void addEssentialGui();
   void loadTexturesIntoKingPin();
 
   GameContent _gameContent; // Handles the asteroids, players, etc.  

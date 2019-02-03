@@ -29,6 +29,7 @@ public:
 
   static void setWorldSize(float width, float height);
 
+  void setLife(float life);
   void setSize(float width, float height);
   void setVelocity(const glm::vec2 &vel);
   void setPosition(const glm::vec2 &pos);
@@ -41,6 +42,7 @@ public:
   glm::vec2 getVelocity() const;
   float getSpeed() const;
   float getMaxSpeed() const;
+  float getLife() const;
 
   EntityType getEntityType() const;
   EntityStatus getEntityStatus() const;

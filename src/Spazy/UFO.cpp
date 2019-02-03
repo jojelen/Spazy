@@ -2,8 +2,8 @@
 #include "HelpFunctions.h"
 #include "KingPin/ResourceManager.h"
 
-#include <random>
 #include <iostream>
+#include <random>
 
 UFO::UFO(const glm::vec2 &pos, const glm::vec2 &vel, const float &width,
          const float &height)
@@ -29,10 +29,7 @@ UFO::UFO(const glm::vec2 &pos, const glm::vec2 &vel, const float &width,
                    .id;
 }
 
-UFO::~UFO() 
-{
-  std::cout << "Destroying UFO!\n";
-}
+UFO::~UFO() { std::cout << "Destroying UFO!\n"; }
 
 void UFO::update(float deltaTime)
 {
@@ -66,9 +63,8 @@ void UFO::shoot()
 {
   if (_reloadTime == 0)
   {
-    _lasers.emplace_back(_position,
-                         getTargetDirection(), 8.0f, 1000, GREEN);
-                         _lasers.back().setImmuneTarget(this);
+    _lasers.emplace_back(_position, getTargetDirection(), 8.0f, 1000, GREEN,
+                         this);
     _reloadTime = 150; // Reload time
   }
 
@@ -88,19 +84,20 @@ void UFO::interactWith(std::vector<Entity *> &entities)
 glm::vec2 UFO::getTargetDirection() const
 {
   glm::vec2 direction;
-  if ( !_targets.empty()){
+  if (!_targets.empty())
+  {
     direction = _targets.back()->getPosition() - getPosition();
-    for (unsigned int i = 0;  i < _targets.size() -1; ++i)
+    for (unsigned int i = 0; i < _targets.size() - 1; ++i)
     {
-      if ( _targets[i]->getEntityStatus() != DESTROYED)
-      { 
+      if (_targets[i]->getEntityStatus() != DESTROYED)
+      {
         glm::vec2 targetVec = _targets[i]->getPosition() - getPosition();
         if (glm::length(targetVec) < glm::length(direction))
           direction = targetVec;
       }
     }
 
-    direction = glm::normalize(direction);  
+    direction = glm::normalize(direction);
   }
   else
     direction = getUnitVec();
@@ -112,7 +109,7 @@ void UFO::steer()
 {
   float speedBefore = getSpeed();
   glm::vec2 forceDir = getTargetDirection();
-  forceDir = _steerForce *  glm::vec2(forceDir.y, -forceDir.x);
+  forceDir = _steerForce * glm::vec2(forceDir.y, -forceDir.x);
   applyForce(forceDir, _steerForce);
 
   if (getSpeed() > speedBefore)

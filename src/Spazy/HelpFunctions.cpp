@@ -5,7 +5,7 @@
 
 std::vector<glm::vec2> splitVecIntoSeveral(glm::vec2 vec, const int &number)
 {
-  std::cout << "Splitting vector\n";
+  // std::cout << "Splitting vector\n";
   std::vector<glm::vec2> vectors;
   vectors.resize(number);
 
@@ -20,10 +20,10 @@ std::vector<glm::vec2> splitVecIntoSeveral(glm::vec2 vec, const int &number)
   vectors.back().x += vec.x;
   vectors.back().y += vec.y;
 
-  Check: // DEBUG
-  printVecInfo( "VecIn", vec);
-  for (int i = 0; i < vectors.size(); ++i)
-     printVecInfo("VecNr " + std::to_string(i), vectors[i]);
+  // Check: // DEBUG
+  // printVecInfo( "VecIn", vec);
+  // for (int i = 0; i < vectors.size(); ++i)
+  //    printVecInfo("VecNr " + std::to_string(i), vectors[i]);
   return vectors;
 }
 
@@ -50,4 +50,21 @@ glm::vec2 getUnitVec()
   float angle = randUnit() * 2. * M_PI;
 
   return glm::vec2( cos(angle), sin(angle));
+}
+
+int calcScore(EntityType type)
+{
+  switch(type)
+  {
+    case SPACESHIP:
+    return -50;
+    case BIRD: 
+    return 5;
+    case ASTEROID:
+    return 1;
+    case ENEMY: 
+    return 10;
+    default:
+    return 0;
+  }
 }

@@ -1,11 +1,14 @@
 #include "Laser.h"
+#include "HelpFunctions.h"
+#include "Spaceship.h"
+
 #include "KingPin/ResourceManager.h"
 #include "KingPin/SpriteBatch.h"
 
 Laser::Laser(const glm::vec2 &pos, const glm::vec2 &dir, const float &speed,
-             const int &lifeTime, const COLOR &color)
-    : _lifeTime(lifeTime), _position(pos), _direction(dir),  _speed(speed), _mass(20.f), _immuneTarget(nullptr),
-      _color(color)
+             const int &lifeTime, const COLOR &color, Entity *ent)
+    : _lifeTime(lifeTime), _position(pos), _direction(dir), _speed(speed),
+      _mass(20.f), _shooter(ent), _color(color)
 {
   _angle = atan(dir.y / dir.x) + 1.577;
   if (dir.x < 0)
@@ -30,10 +33,7 @@ Laser::Laser(const glm::vec2 &pos, const glm::vec2 &dir, const float &speed,
 
 Laser::~Laser() {}
 
-void Laser::setImmuneTarget(Entity* ent)
-{
-  _immuneTarget = ent;
-}
+void Laser::setShooter(Entity *ent) { _shooter = ent; }
 
 void Laser::draw(KingPin::SpriteBatch &spriteBatch)
 {
@@ -86,7 +86,8 @@ bool Laser::isColliding(std::vector<Entity *> &entities)
 
   for (int i = 0; i < entities.size(); i++)
   {
-    if (entities[i] != _immuneTarget && entities[i]->getEntityStatus() != DESTROYED)
+    if (entities[i] != _shooter &&
+        entities[i]->getEntityStatus() != DESTROYED)
     {
       glm::vec2 entitySize = entities[i]->getSize();
       float radie = entitySize.x > entitySize.y ? entitySize.x : entitySize.y;
@@ -98,6 +99,12 @@ bool Laser::isColliding(std::vector<Entity *> &entities)
         entities[i]->projectileHit(momentum, 1.);
         // printf("Hitting target!\n"); // DEBUG
         _lifeTime = 0;
+        if (entities[i]->getEntityStatus() == DESTROYED)
+          if (_shooter != nullptr)
+            if (_shooter->getEntityType() == SPACESHIP)
+            {
+              ((Spaceship *)_shooter)->addScore(calcScore(entities[i]->getEntityType()));
+            }
         return true;
       }
     }

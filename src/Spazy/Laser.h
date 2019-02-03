@@ -15,7 +15,7 @@ class Laser
 {
 public:
   Laser(const glm::vec2 &pos, const glm::vec2 &dir, const float &speed,
-        const int &lifeTime, const COLOR &color);
+        const int &lifeTime, const COLOR &color,Entity* ent = nullptr);
   ~Laser();
 
   void draw(KingPin::SpriteBatch &spriteBatch);
@@ -26,7 +26,7 @@ public:
 
   // Sets the color of the laser and changes _textureID if necessary
   void setColor(const COLOR color);
-  void setImmuneTarget(Entity* ent);
+  void setShooter(Entity* ent);
   
 private:
   int _lifeTime;
@@ -37,7 +37,7 @@ private:
   glm::vec2 _direction;
   glm::vec2 _position;
   
-  Entity* _immuneTarget;
+  Entity* _shooter;
 
   COLOR _color;
 

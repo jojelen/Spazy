@@ -24,6 +24,8 @@ public:
   void addWindow(std::unique_ptr<GuiWindow> &window);
 
   void show();
+
+  void clearGui();
 };
 
 

@@ -2,7 +2,7 @@
 #include "KingPin/ResourceManager.h"
 
 Spaceship::Spaceship(const int playerNr)
-    : _gunReload(0), _score(0), _playerNr(playerNr)
+    : _gunReload(0), _score(0), _playerNr(playerNr), _maxLife(5.0f)
 {
   _entityType = SPACESHIP;
 }
@@ -17,7 +17,7 @@ void Spaceship::init(float speed, glm::vec2 pos,
   _position = pos;
   _maxSpeed = 4.0f;
   _acceleration = 0.1f;
-  _life = 5.0f;
+  _life = _maxLife;
 
   // Pointer to MainGame's inputManager
   _inputManager = &inputManager;
@@ -44,12 +44,11 @@ void Spaceship::setControls(const SpaceshipControls &controls)
 
 void Spaceship::update(float deltaTime)
 {
-  static const int normalText[2] = {KingPin::ResourceManager::getTexture(
-                                        "src/Spazy/res/textures/player.png")
-                                        .id,
-                                    KingPin::ResourceManager::getTexture(
-                                        "src/Spazy/res/textures/player2.png")
-                                        .id};
+  static const int normalText[2] = {
+      KingPin::ResourceManager::getTexture("src/Spazy/res/textures/player.png")
+          .id,
+      KingPin::ResourceManager::getTexture("src/Spazy/res/textures/player2.png")
+          .id};
   static const int forwardText[2] = {
       KingPin::ResourceManager::getTexture(
           "src/Spazy/res/textures/playerForward.png")
@@ -93,7 +92,7 @@ void Spaceship::update(float deltaTime)
     }
 
     if (_gunReload > 0)
-    --_gunReload;
+      --_gunReload;
   }
 
   updateEffects(deltaTime);
@@ -104,9 +103,8 @@ void Spaceship::shoot()
   if (_gunReload == 0)
   {
     _lasers.emplace_back(_position + 0.5f * (getSize()).y * getDirection(),
-                         getDirection(), 15.0f, 1000,
-                         (COLOR)(_playerNr - 1));
-    _lasers.back().setImmuneTarget(this);
+                         getDirection(), 15.0f, 1000, (COLOR)(_playerNr - 1),
+                         this);
     _gunReload = 20; // Reload time
   }
 }
@@ -135,10 +133,7 @@ void Spaceship::isKilling(std::vector<Entity *> &entities)
   // Check if laser is colliding with entities
   for (auto &laser : _lasers)
   {
-    if (laser.isColliding(entities)) // projectileHit if it hits and destroys laser
-    {
-      ++_score;
-    }
+    laser.isColliding(entities);
   }
 }
 
@@ -159,6 +154,7 @@ bool Spaceship::isColliding(std::vector<Entity *> &entities)
         if (distance < radie)
         {
           _entityStatus = DESTROYED;
+          _life = 0.f;
           return true;
         }
       }
@@ -175,4 +171,9 @@ void Spaceship::drawEffects(KingPin::SpriteBatch &spriteBatch)
   }
 }
 
-int Spaceship::getScore() { return _score; }
+int Spaceship::getScore() const { return _score; }
+
+void Spaceship::addScore(int score) { _score += score; }
+int Spaceship::getPlayerNr() const { return _playerNr; }
+
+float Spaceship::getMaxLife() const { return _maxLife; }

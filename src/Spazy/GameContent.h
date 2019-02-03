@@ -2,6 +2,7 @@
 
 #include <KingPin/InputManager.h>
 #include <KingPin/SpriteBatch.h>
+#include <KingPin/Window.h>
 
 #include <algorithm>
 
@@ -32,7 +33,7 @@ public:
   void draw(); // Calls effects and entities draw functions
 
   void addGameOver(); // Adds a GAME OVER pop up sign
-  void addPlayer(int playerNr, KingPin::InputManager *inputManager);
+  void addPlayer(int playerNr, KingPin::InputManager *inputManager, KingPin::Window* window);
   void addRandomAsteroid(const float &radius);
   void addAsteroid(const glm::vec2 &pos,const glm::vec2 &vel, const float &radius);
   void addUFO();
@@ -42,6 +43,8 @@ public:
   int getNumPlayers();   // Returns the number of players that are alive
   int getNumEntities();  // Returns number of non-player entities.
   int getNumAsteroids(); // Returns the number of asteroids
+
+  void addGui(KingPin::Window* window);
 
 private:
   void updatePlayers(const float &deltaTime);

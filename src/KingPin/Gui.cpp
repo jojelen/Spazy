@@ -62,4 +62,9 @@ void Gui::show()
   SDL_GL_MakeCurrent(_window, _glContext);
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
+
+void Gui::clearGui()
+{
+  _guiWindows.clear();
+}
 } // namespace KingPin
