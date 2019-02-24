@@ -10,7 +10,7 @@ class Menu : public KingPin::GuiWindow
   ~Menu();
 
   void show() override;
-
+  
   private:
     GameState *_gameState;
 };

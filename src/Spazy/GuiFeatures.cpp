@@ -1,10 +1,13 @@
 #include "GuiFeatures.h"
+#include "Options.h"
 
 Menu::Menu(GameState *gameState) : _gameState(gameState) {}
 Menu::~Menu() {}
 
-void Menu::show() {
+void Menu::show()
+{
   static bool window = true;
+  static bool optionsWindow = false;
   static ImGuiWindowFlags window_flags = 0;
   window_flags |= ImGuiWindowFlags_NoTitleBar;
   window_flags |= ImGuiWindowFlags_NoScrollbar;
@@ -18,32 +21,58 @@ void Menu::show() {
 
   // 2. Show a simple window that we create ourselves. We use a Begin/End pair
   // to created a named window.
-  if (window) {
+  if (window)
+  {
     ImGui::Begin("Menu", &window, window_flags);
 
-    if (ImGui::Button("Single player")) {
+    if (ImGui::Button("Single player"))
+    {
       *_gameState = GameState::SINGLE_PLAYER;
       window = false;
     }
 
-    if (ImGui::Button("Two players")) {
+    if (ImGui::Button("Two players"))
+    {
       *_gameState = GameState::TWO_PLAYER;
       window = false;
     }
-    ImGui::Button("Options");
-    if (ImGui::Button("Quit")) {
+
+    if (ImGui::Button("Options"))
+    {
+      optionsWindow = optionsWindow == false ? true : false;
+    }
+
+    if (ImGui::Button("Quit"))
+    {
       *_gameState = GameState::QUIT;
       window = false;
     }
     ImGui::End();
-  } else if (*_gameState == GameState::MENU)
+  }
+  else if (*_gameState == GameState::MENU)
     window = true;
+
+  if (optionsWindow)
+  {
+    ImGui::SetNextWindowPos(ImVec2(1280 / 4 - 75, 300));
+    ImGui::SetNextWindowSize(ImVec2(200, 150));
+
+    ImGui::Begin("Options", &optionsWindow);
+
+    ImGui::Checkbox("Friendly fire", &Options::friendlyFire);
+    ImGui::Checkbox("Spaceship collisions", &Options::spaceshipCollisions);
+
+    if (ImGui::Button("Close"))
+      optionsWindow = false;
+    ImGui::End();
+  }
 }
 
 LevelCounter::LevelCounter(int *level) : _level(level) {}
 LevelCounter::~LevelCounter() {}
 
-void LevelCounter::show() {
+void LevelCounter::show()
+{
   static bool window = true;
   static ImGuiWindowFlags window_flags = 0;
   window_flags |= ImGuiWindowFlags_NoTitleBar;
@@ -59,7 +88,8 @@ void LevelCounter::show() {
 
   // 2. Show a simple window that we create ourselves. We use a Begin/End pair
   // to created a named window.
-  if (window) {
+  if (window)
+  {
     static float f = 0.0f;
     static int counter = 0;
 
@@ -73,7 +103,8 @@ void LevelCounter::show() {
 FpsCounter::FpsCounter() {}
 FpsCounter::~FpsCounter() {}
 
-void FpsCounter::show() {
+void FpsCounter::show()
+{
   static bool window = true;
   static ImGuiWindowFlags window_flags = 0;
   window_flags |= ImGuiWindowFlags_NoTitleBar;
@@ -88,7 +119,8 @@ void FpsCounter::show() {
 
   // 2. Show a simple window that we create ourselves. We use a Begin/End pair
   // to created a named window.
-  if (window) {
+  if (window)
+  {
     static float f = 0.0f;
     static int counter = 0;
 
@@ -102,8 +134,10 @@ void FpsCounter::show() {
 PlayerInfo::PlayerInfo(Spaceship *player) : _player(player) {}
 PlayerInfo::~PlayerInfo() {}
 
-void PlayerInfo::show() {
-  if (_player != nullptr) {
+void PlayerInfo::show()
+{
+  if (_player != nullptr)
+  {
     static bool window = true;
     static ImGuiWindowFlags window_flags = 0;
     window_flags |= ImGuiWindowFlags_NoTitleBar;
@@ -125,17 +159,21 @@ void PlayerInfo::show() {
 
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair
     // to created a named window.
-    if (window) {
+    if (window)
+    {
       static float f = 0.0f;
       static int counter = 0;
 
       ImGui::Begin("PlayerInfo", &window, window_flags);
-      if (_player->getPlayerNr() == 1) {
+      if (_player->getPlayerNr() == 1)
+      {
         ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Player %i",
                            _player->getPlayerNr());
         ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Score %i",
                            _player->getScore());
-      } else {
+      }
+      else
+      {
         ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Player %i",
                            _player->getPlayerNr());
         ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Score %i",

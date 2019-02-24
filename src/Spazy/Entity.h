@@ -40,6 +40,7 @@ public:
   glm::vec2 getPosition() const;
   glm::vec2 getDirection() const;
   glm::vec2 getVelocity() const;
+  glm::vec2 getMomentum() const;
   float getSpeed() const;
   float getMaxSpeed() const;
   float getLife() const;

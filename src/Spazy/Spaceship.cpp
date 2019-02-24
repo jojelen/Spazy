@@ -1,4 +1,6 @@
 #include "Spaceship.h"
+#include "Options.h"
+
 #include "KingPin/ResourceManager.h"
 
 Spaceship::Spaceship(const int playerNr)
@@ -144,17 +146,21 @@ bool Spaceship::isColliding(std::vector<Entity *> &entities)
     // Check if ship is colliding
     for (int i = 1; i < entities.size(); i++)
     {
-      if (entities[i]->getEntityType() == ASTEROID)
+      if (entities[i] == this)
+        continue;
+
+      if (entities[i]->getEntityType() == ASTEROID || Options::spaceshipCollisions)
       {
         glm::vec2 entitySize = entities[i]->getSize();
         float radie = entitySize.x > entitySize.y ? entitySize.x : entitySize.y;
         glm::vec2 temp = entities[i]->getPosition();
         float distance = glm::distance(entities[i]->getPosition(), _position);
 
-        if (distance < radie)
+        if (distance < 0.8*radie)
         {
           _entityStatus = DESTROYED;
           _life = 0.f;
+          entities[i]->projectileHit(getMomentum(), 3.);
           return true;
         }
       }

@@ -128,6 +128,7 @@ float Entity::getMaxSpeed() const { return _maxSpeed; }
 glm::vec2 Entity::getSize() const { return glm::vec2(_width, _height); }
 glm::vec2 Entity::getPosition() const { return _position; }
 glm::vec2 Entity::getVelocity() const { return _velocity; }
+glm::vec2 Entity::getMomentum() const { return _mass * _velocity; }
 glm::vec2 Entity::getDirection() const
 {
   return glm::vec2(std::cos(_angle), std::sin(_angle));

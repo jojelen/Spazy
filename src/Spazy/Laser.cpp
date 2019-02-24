@@ -1,6 +1,7 @@
 #include "Laser.h"
 #include "HelpFunctions.h"
 #include "Spaceship.h"
+#include "Options.h"
 
 #include "KingPin/ResourceManager.h"
 #include "KingPin/SpriteBatch.h"
@@ -86,6 +87,10 @@ bool Laser::isColliding(std::vector<Entity *> &entities)
 
   for (int i = 0; i < entities.size(); i++)
   {
+    // Does nothing to spaceships if friendly fire is off.
+    if (entities[i]->getEntityType() == SPACESHIP && Options::friendlyFire == false)
+      continue;
+
     if (entities[i] != _shooter &&
         entities[i]->getEntityStatus() != DESTROYED)
     {
