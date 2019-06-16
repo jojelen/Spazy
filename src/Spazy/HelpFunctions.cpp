@@ -9,12 +9,13 @@ std::vector<glm::vec2> splitVecIntoSeveral(glm::vec2 vec, const int &number)
   std::vector<glm::vec2> vectors;
   vectors.resize(number);
 
+  float angleRange = (10.f - glm::length(vec)) * M_PI;
+  float fraction = 1.0f / number;
+
   for (auto &vector : vectors)
   {
-    vector.x = randUnit() * vec.x;
-    vec.x -= vector.x;
-    vector.y = randUnit() * vec.y;
-    vec.y -= vector.y;
+    vector.x = number * vec.x;
+    vector.y = number * vec.y;
   }
   // Adding the rest to the last one:
   vectors.back().x += vec.x;

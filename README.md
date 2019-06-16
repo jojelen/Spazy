@@ -1,13 +1,18 @@
 # Spazy & KingPin
 
+![](demo.gif)
+
 Spazy is a small 2D game similar to the oldschool Asteroids game.
 It is built with the included custom made KingPin game engine.
 
-The game itself is quite boring actually and I wouldn't recommend
-it.
 This is a project for myself that I started with the intention to learn C++ and 
 object oriented programming in general. Maybe I will continue working on it some
-day...
+day... 
+
+There is a lot of material on the web, but special thanks to [https://www.youtube.com/user/makinggameswithben] and [https://www.youtube.com/user/TheChernoProject].
+
+The UI is created with IMGUI [https://github.com/ocornut/imgui].
+
 
 ## Dependencies
 
