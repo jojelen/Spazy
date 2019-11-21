@@ -44,6 +44,7 @@ public:
   float getSpeed() const;
   float getMaxSpeed() const;
   float getLife() const;
+  float getAngle() const; // Returns direction angle in [0, 2 pi]
 
   EntityType getEntityType() const;
   EntityStatus getEntityStatus() const;
