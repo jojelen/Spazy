@@ -1,7 +1,6 @@
 #include "Spaceship.h"
-#include "NN.h"
 #include "Options.h"
-
+#include "Sounds.h"
 #include "KingPin/ResourceManager.h"
 
 Spaceship::Spaceship(const int playerNr)
@@ -95,6 +94,7 @@ void Spaceship::shoot() {
                              getDirection(), 15.0f, 1000,
                              (COLOR)(_playerNr - 1), this);
         _gunReload = 20;  // Reload time
+        playSound("laser");
     }
 }
 
@@ -112,7 +112,6 @@ void Spaceship::updateEffects(const float &deltaTime) {
 void Spaceship::interactWith(std::vector<Entity *> &entities) {
     isKilling(entities);
     static int counter = 0;
-    if (counter++ == 0) exportDataForAI(this, entities, _inputManager);
     if (counter > 60) counter = 0;
 }
 

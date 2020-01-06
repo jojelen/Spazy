@@ -6,6 +6,7 @@
 #include <KingPin/SpriteBatch.h>
 #include <KingPin/Window.h>
 
+
 #include "Entity.h"
 #include "Asteroid.h"
 #include "Laser.h"
@@ -53,8 +54,9 @@ private:
   /// Member Variables
   KingPin::Window _window;              // The game window
   KingPin::GLSLProgram _textureProgram; // The shader program
-  KingPin::InputManager _inputManager;  // Handles input
-  KingPin::Camera2D _camera;            // Main Camera
+  KingPin::InputManager _inputManager;  
+  KingPin::Camera2D _camera;            
+  
 
   void addEssentialGui();
   void loadTexturesIntoKingPin();
@@ -69,7 +71,6 @@ private:
   int _screenWidth, _screenHeight;
   unsigned int _numPlayers;
   int _fps;
-  // int _gunReload;
 
   int _score;
   void printScore() const;

@@ -2,16 +2,24 @@
 #include "Bird.h"
 #include "GuiFeatures.h"
 #include "HelpFunctions.h"
+#include "Sounds.h"
 
 #include <algorithm>
 #include <iostream>
 #include <memory>
 #include <string>
 
-GameContent::GameContent() {}
+GameContent::GameContent() 
+{
+    loadSounds();
+}
 
 GameContent::~GameContent() { deleteContent(); }
 
+void GameContent::loadSounds()
+{
+    
+}
 void GameContent::initializeSpriteBatches(float screenWidth,
                                           float screenHeight)
 {
@@ -211,7 +219,7 @@ void GameContent::updateEntities(const float &deltaTime)
     if (_entities[i]->getEntityStatus() == DESTROYED)
     {
       std::cout << "Adding explosion\n"; // DEBUG
-      addExplosion(_entities[i]->getPosition());
+      addExplosion(_entities[i]->getPosition(), _entities[i]->getSize().x);
 
       // Adds small asteroids if it was a large one
       if (_entities[i]->getEntityType() == ASTEROID &&
@@ -355,9 +363,14 @@ void GameContent::addUFO()
   }
 }
 
-void GameContent::addExplosion(const glm::vec2 pos)
+void GameContent::addExplosion(const glm::vec2 pos, float size)
 {
-  _effects.push_back((Effect *)new Explosion(pos, 100.));
+  _effects.push_back((Effect *)new Explosion(pos, size));
+
+    if (size > 50.)
+        playSound("explosion");
+    else
+        playSound("smallExplosion");
 }
 
 void GameContent::printScore() const

@@ -2,88 +2,43 @@
 #include "Asteroid.h"
 #include "GuiFeatures.h"
 
-#include "KingPin/KingPin.h"
 #include "KingPin/GuiWindow.h"
+#include "KingPin/KingPin.h"
 #include "KingPin/ResourceManager.h"
 #include "KingPin/Timing.h"
+
 
 #include <SDL/SDL.h>
 #include <algorithm>
 #include <iostream>
-#include <string>
 #include <memory>
+#include <string>
+
 
 Spazy::Spazy()
     : _screenWidth(1280), _screenHeight(920), _numPlayers(1),
-      _gamestate(GameState::MENU), _windowInitialized(false), _currentLevel(1)
-{
+      _gamestate(GameState::MENU), _windowInitialized(false), _currentLevel(1) {
 }
 
 Spazy::~Spazy() {}
 
-void Spazy::start()
-{
-
-  // while (_gamestate == GameState::MENU)
-  // {
-  //   std::cout << "Space Q!\n";
-  //   std::cout << "Menu:\n";
-  //   std::cout << " 1. 1 player\n";
-  //   std::cout << " 2. 2 players\n";
-  //   std::cout << " 3. Testing ground\n";
-  //   std::cout << " 0. Quit\n";
-
-  //   std::cout << "Choice: ";
-  //   std::string choice;
-  //   std::getline(std::cin, choice);
-  //   try
-  //   {
-  //     switch (std::stoi(choice))
-  //     {
-  //     case 1:
-  //       run();
-  //       break;
-  //     case 2:
-  //       run(2);
-  //       break;
-  //     case 3:
-  //       std::cout << "Not implemented yet :(\n";
-  //       run(2);
-  //       break;
-  //     case 0:
-  //       _gamestate = GameState::QUIT;
-  //       break;
-  //     default:
-  //       std::cout << "Invalid choice.\n";
-  //       break;
-  //     }
-  //   }
-  //   catch (...)
-  //   {
-  //     std::cout << "Invalid choice.\n";
-  //   }
-  // }
+void Spazy::start() {
 
   _numPlayers = 0;
   _currentLevel = 0;
   initSystems();
 
-  while (_gamestate != GameState::QUIT)
-  {
-    switch (_gamestate)
-    {
-    case GameState::MENU:
-    {
+  while (_gamestate != GameState::QUIT) {
+    switch (_gamestate) {
+    case GameState::MENU: {
       menuLoop();
       break;
     }
-    case GameState::SINGLE_PLAYER:
-    {
+    case GameState::SINGLE_PLAYER: {
       run();
       break;
     }
-    case GameState::TWO_PLAYER:
-    {
+    case GameState::TWO_PLAYER: {
       run(2);
       break;
     }
@@ -91,8 +46,7 @@ void Spazy::start()
   }
 }
 
-void Spazy::run(unsigned int numPlayers)
-{
+void Spazy::run(unsigned int numPlayers) {
   _numPlayers = numPlayers;
 
   clearGameContent();
@@ -104,15 +58,13 @@ void Spazy::run(unsigned int numPlayers)
   gameLoop();
 }
 
-void Spazy::shutDownGame()
-{
+void Spazy::shutDownGame() {
   _gameContent.addGameOver();
 
   _gamestate = GameState::MENU;
 }
 
-void Spazy::clearGameContent()
-{
+void Spazy::clearGameContent() {
 
   _currentLevel = 1;
   _window.clearGui();
@@ -120,10 +72,8 @@ void Spazy::clearGameContent()
   _gameContent.deleteContent();
 }
 
-void Spazy::initSystems()
-{
-  if (!_windowInitialized)
-  {
+void Spazy::initSystems() {
+  if (!_windowInitialized) {
     std::cout << "Initializing KingPin!\n"; // DEBUG
     // Initialize KingPin engine
     KingPin::init();
@@ -151,26 +101,25 @@ void Spazy::initSystems()
   _world.init();                        // Initialize the world background
 }
 
-void Spazy::addEssentialGui()
-{std::unique_ptr<KingPin::GuiWindow> fps(new FpsCounter());
-    _window.addGuiWindow(fps);
+void Spazy::addEssentialGui() {
+  std::unique_ptr<KingPin::GuiWindow> fps(new FpsCounter());
+  _window.addGuiWindow(fps);
 
-    std::unique_ptr<KingPin::GuiWindow> level(new LevelCounter(&_currentLevel));
-    _window.addGuiWindow(level);
+  std::unique_ptr<KingPin::GuiWindow> level(new LevelCounter(&_currentLevel));
+  _window.addGuiWindow(level);
 
-    std::unique_ptr<KingPin::GuiWindow> menu(new Menu(&_gamestate));
-    _window.addGuiWindow(menu);}
+  std::unique_ptr<KingPin::GuiWindow> menu(new Menu(&_gamestate));
+  _window.addGuiWindow(menu);
+}
 
-void Spazy::startLevel(unsigned int level)
-{
+void Spazy::startLevel(unsigned int level) {
 
   // Resets the players to FINE status
   for (int i = 1; i <= _numPlayers; ++i)
     _gameContent.addPlayer(i, &_inputManager, &_window);
 
   // Adds content of level
-  for (int i = 0; i < level; ++i)
-  {
+  for (int i = 0; i < level; ++i) {
     _gameContent.addRandomAsteroid(100.0f);
   }
 
@@ -182,18 +131,14 @@ void Spazy::startLevel(unsigned int level)
     _gameContent.addFlock(12);
 }
 
-void Spazy::addPlayers()
-{
+void Spazy::addPlayers() {
   std::cout << "Initializing Players!\n"; // DEBUG
-  // Initialize player spaceship
+
   for (int i = 1; i <= _numPlayers; ++i)
     _gameContent.addPlayer(i, &_inputManager, &_window);
-
-  // _gameContent.addGui(&_window);
 }
 
-void Spazy::initShaders()
-{
+void Spazy::initShaders() {
   // Compile our color shader
   _textureProgram.compileShaders("src/Spazy/res/shaders/textureShading.vert",
                                  "src/Spazy/res/shaders/textureShading.frag");
@@ -203,8 +148,7 @@ void Spazy::initShaders()
   _textureProgram.linkShaders();
 }
 
-void Spazy::gameLoop()
-{
+void Spazy::gameLoop() {
   const float DESIRED_FPS = 60.0f;
   const int MAX_PHYSICS_STEPS = 6;
 
@@ -218,8 +162,8 @@ void Spazy::gameLoop()
   float previousTicks = SDL_GetTicks();
 
   std::cout << "Starting game loop!\n"; // DEBUG
-  while (_gamestate == GameState::SINGLE_PLAYER || _gamestate == GameState::TWO_PLAYER)
-  {
+  while (_gamestate == GameState::SINGLE_PLAYER ||
+         _gamestate == GameState::TWO_PLAYER) {
     fpsLimiter.begin();
 
     float newTicks = SDL_GetTicks();
@@ -232,8 +176,7 @@ void Spazy::gameLoop()
     processInput();
 
     int i = 0;
-    while (totalDeltaTime > 0.0f && i < MAX_PHYSICS_STEPS)
-    {
+    while (totalDeltaTime > 0.0f && i < MAX_PHYSICS_STEPS) {
       float deltaTime = std::min(totalDeltaTime, MAX_DELTA_TIME);
       updateDynamicalContent(deltaTime);
       totalDeltaTime -= deltaTime;
@@ -246,8 +189,7 @@ void Spazy::gameLoop()
   }
 }
 
-void Spazy::menuLoop()
-{
+void Spazy::menuLoop() {
 
   const float DESIRED_FPS = 60.0f;
   const int MAX_PHYSICS_STEPS = 6;
@@ -262,8 +204,7 @@ void Spazy::menuLoop()
   float previousTicks = SDL_GetTicks();
 
   std::cout << "Starting menu loop!\n"; // DEBUG
-  while (_gamestate == GameState::MENU)
-  {
+  while (_gamestate == GameState::MENU) {
     fpsLimiter.begin();
 
     float newTicks = SDL_GetTicks();
@@ -283,8 +224,7 @@ void Spazy::menuLoop()
   }
 }
 
-void Spazy::processInput()
-{
+void Spazy::processInput() {
   SDL_Event evnt;
 
   // Constants for camera movement
@@ -292,10 +232,8 @@ void Spazy::processInput()
   const float SCALE_SPEED = 0.1f;
 
   // If a key gets pressed, this sends the information to _inputManager
-  while (SDL_PollEvent(&evnt))
-  {
-    switch (evnt.type)
-    {
+  while (SDL_PollEvent(&evnt)) {
+    switch (evnt.type) {
     case SDL_QUIT:
       _gamestate = GameState::QUIT;
       break;
@@ -316,50 +254,26 @@ void Spazy::processInput()
       break;
     }
   }
-
-  // Zoom in and out
-  // if (_inputManager.isKeyPressed(SDLK_q)) {
-  //   _camera.setScale(_camera.getScale() + SCALE_SPEED);
-  // }
-  // if (_inputManager.isKeyPressed(SDLK_e)) {
-  //   _camera.setScale(_camera.getScale() - SCALE_SPEED);
-  // }
-
-  // if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT))
-  // {
-  //   glm::vec2 mouseCoords = _inputManager.getMouseCoords();
-  //   glm::vec2 worldCoords =
-  //       _camera.convertScreenToWorld(_inputManager.getMouseCoords());
-
-  //   std::cout << "Mouse coords: " << mouseCoords.x << " " << mouseCoords.y
-  //             << std::endl;
-  //   // std::cout<< "World coords: " << worldCoords.x << " " << worldCoords.y <<
-  //   // std::endl;
-  // }
 }
 
 void Spazy::printScore() const { printf("Score: %i\n", _score); }
 
-void Spazy::updateDynamicalContent(float deltaTime)
-{
+void Spazy::updateDynamicalContent(float deltaTime) {
 
   _gameContent.update(deltaTime);
 
-  // Check if there are no players left
   if (_gameContent.getNumPlayers() == 0)
     shutDownGame();
 
   // Start new level if there are no asteroids left
-  if (_gameContent.getNumEntities() == 0)
-  {
+  if (_gameContent.getNumEntities() == 0) {
     std::cout << "\nStarting level " << _currentLevel + 1 << std::endl; // DEBUG
     startLevel(++_currentLevel);
   }
   _camera.update();
 }
 
-void Spazy::drawGame()
-{
+void Spazy::drawGame() {
   // std::cout << "Drawing game!\n"; // DEBUG
 
   // Set the base depth to 1.0
@@ -394,8 +308,7 @@ void Spazy::drawGame()
   _window.swapBuffer();
 }
 
-void Spazy::loadTexturesIntoKingPin()
-{
+void Spazy::loadTexturesIntoKingPin() {
   using namespace KingPin;
 
   // Load pngs

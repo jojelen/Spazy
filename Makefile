@@ -20,6 +20,7 @@ CFLAGS= -std=c++11 -Wall $(OPT) -Idep/include -Isrc -w
 # Location of .obj and .a files
 OBJDIR=lib/obj
 LIBDIR=lib
+LDFLAGS+=-L$(LIBDIR)
 
 KINGPINSRC=$(subst src/KingPin/, , $(wildcard src/KingPin/*.cpp))
 # IMGUI
@@ -28,13 +29,20 @@ KINGPINSRC+=$(subst dep/imgui/, , $(wildcard dep/imgui/*.cpp))
 CFLAGS+=-Idep/imgui -DIMGUI_IMPL_OPENGL_LOADER_GLEW `sdl2-config --cflags`
 LDFLAGS+=-lGL -ldl `sdl2-config --libs`
 
+# FMOD
+# Implements audio
+KINGPINSRC+=$(subst dep/fmod/, , $(wildcard dep/fmod/*.cpp))
+LOWLEVEL_LIB =lib/libfmod.so
+CFLAGS+=-Idep/fmod -m64 -pthread 
+LDFLAGS+=-Wl,-rpath=\$$ORIGIN/$(dir ${LOWLEVEL_LIB}) ${LOWLEVEL_LIB}
+
 KINGPINOBJ=$(KINGPINSRC:.cpp=.o)
 
 SPAZYSRC=$(subst src/Spazy/, , $(wildcard src/Spazy/*.cpp))
 SPAZYOBJ:=$(SPAZYSRC:.cpp=.o)
 
 #LDFLAGS is used for programs using created library in lib.
-LDFLAGS+=-L/usr/lib64 -L$(LIBDIR) -lGLU -lGL -lglut -lSDL2main -lSDL2 -lglfw3 -lGLEW
+LDFLAGS+=-L/usr/lib64 -lGLU -lGL -lglut -lSDL2main -lSDL2 -lglfw3 -lGLEW
 
 LIBS=libSpazy.a libKingPin.a 
 PROG=main sandbox
