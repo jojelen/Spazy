@@ -72,15 +72,6 @@ void GameContent::draw()
   _popBatch.renderBatch();
 }
 
-void GameContent::addGui(KingPin::Window *window)
-{
-  // for (auto player : _players)
-  // {
-  //   std::unique_ptr<KingPin::GuiWindow> playerInfo(new PlayerInfo(player));
-  //   window->addGuiWindow(playerInfo);
-  // }
-}
-
 int GameContent::getNumEntities()
 {
   int ents = 0;

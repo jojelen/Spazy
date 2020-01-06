@@ -45,8 +45,6 @@ public:
   int getNumEntities();  // Returns number of non-player entities.
   int getNumAsteroids(); // Returns the number of asteroids
 
-  void addGui(KingPin::Window *window);
-
 private:
   void loadSounds();
 
