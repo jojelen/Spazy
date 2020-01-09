@@ -20,6 +20,8 @@ KingPin have a number of external dependecies. The necessary header files for **
 **GLFW**, **glm** and **SDL** are included in dep/include. However, one must 
 also install these libraries: GLU, GL, glut, SDL2, glfw3, GLEW.
 
+KingPin implements sounds with Fmod.
+
 ## Installation and running
 
 The hardest part will probably be to link all the external dependencies, which
