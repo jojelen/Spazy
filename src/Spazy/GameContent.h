@@ -46,8 +46,6 @@ public:
   int getNumAsteroids(); // Returns the number of asteroids
 
 private:
-  void loadSounds();
-
   void updatePlayers(const float &deltaTime);
   void updateEntities(const float &deltaTime);
 

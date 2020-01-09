@@ -2,6 +2,7 @@
 #include "HelpFunctions.h"
 #include "Options.h"
 #include "Spaceship.h"
+#include "Sounds.h"
 
 
 #include "KingPin/ResourceManager.h"
@@ -29,6 +30,8 @@ Laser::Laser(const glm::vec2 &pos, const glm::vec2 &dir, const float &speed,
   default:
     break;
   }
+
+  SoundSystem::playSound(SOUNDS::LASER);
 }
 
 Laser::~Laser() {}

@@ -1,6 +1,5 @@
 #include "Spaceship.h"
 #include "Options.h"
-#include "Sounds.h"
 #include "KingPin/ResourceManager.h"
 
 Spaceship::Spaceship(const int playerNr)
@@ -94,7 +93,6 @@ void Spaceship::shoot() {
                              getDirection(), 15.0f, 1000,
                              (COLOR)(_playerNr - 1), this);
         _gunReload = 20;  // Reload time
-        playSound("laser");
     }
 }
 

@@ -1,20 +1,21 @@
 
 #include "Sounds.h"
 
-void loadSounds(KingPin::AudioEngine &audioEngine) {
-  audioEngine.loadSound("explosion", "src/Spazy/res/audio/explosion.wav");
-  audioEngine.loadSound("smallExplosion",
-                        "src/Spazy/res/audio/grenadeExplosion.wav");
-                        audioEngine.loadSound("laser",
-                        "src/Spazy/res/audio/laser.mp3");
+KingPin::AudioEngine SoundSystem::_audioEngine;
+
+void SoundSystem::loadSounds() {
+  _audioEngine.loadSound(SOUNDS::EXPLOSION,
+                         "src/Spazy/res/audio/explosion.wav");
+  _audioEngine.loadSound(SOUNDS::SMALL_EXPLOSION,
+                         "src/Spazy/res/audio/grenadeExplosion.wav");
+  _audioEngine.loadSound(SOUNDS::LASER, "src/Spazy/res/audio/laser.mp3");
 }
 
-void playSound(const std::string &sound) {
-  static KingPin::AudioEngine audioEngine;
-  static bool sounds_loaded = false;
-  if (!sounds_loaded) {
-    loadSounds(audioEngine);
-    sounds_loaded = true;
-  }
-  audioEngine.playSound(sound);
+void SoundSystem::playSound(unsigned int sound) {
+    _audioEngine.playSound(sound);
+}
+
+void SoundSystem::update()
+{
+    _audioEngine.update();
 }

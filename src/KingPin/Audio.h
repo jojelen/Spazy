@@ -13,15 +13,15 @@ public:
   AudioEngine();
   ~AudioEngine();
 
-  void playSound(const std::string &sound);
-  void loadSound(const std::string &sound, const std::string &soundFile);
-
+  void playSound(unsigned int sound);
+  void loadSound(unsigned int sound, const std::string &soundFile);
+  void update();
 private:
   void init();
   void checkFmodResults(FMOD_RESULT result);
 
   FMOD::System *_system;
-  std::unordered_map<std::string, FMOD::Sound*> _sounds;
+  std::unordered_map<unsigned int, FMOD::Sound*> _sounds;
   FMOD::Channel *_channel = 0;
 };
 

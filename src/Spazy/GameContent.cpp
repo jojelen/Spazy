@@ -11,15 +11,11 @@
 
 GameContent::GameContent() 
 {
-    loadSounds();
+    SoundSystem::loadSounds();
 }
 
 GameContent::~GameContent() { deleteContent(); }
 
-void GameContent::loadSounds()
-{
-    
-}
 void GameContent::initializeSpriteBatches(float screenWidth,
                                           float screenHeight)
 {
@@ -182,6 +178,7 @@ void GameContent::deleteEntity(Entity *ent)
 
 void GameContent::update(const float &deltaTime)
 {
+  SoundSystem::update();
   updatePlayers(deltaTime);
   updateEntities(deltaTime);
 }
@@ -359,9 +356,9 @@ void GameContent::addExplosion(const glm::vec2 pos, float size)
   _effects.push_back((Effect *)new Explosion(pos, size));
 
     if (size > 50.)
-        playSound("explosion");
+        SoundSystem::playSound(SOUNDS::EXPLOSION);
     else
-        playSound("smallExplosion");
+        SoundSystem::playSound(SOUNDS::SMALL_EXPLOSION);
 }
 
 void GameContent::printScore() const

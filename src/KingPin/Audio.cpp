@@ -19,7 +19,7 @@ AudioEngine::~AudioEngine() {
   checkFmodResults(_system->release());
 }
 
-void AudioEngine::playSound(const std::string &sound) {
+void AudioEngine::playSound(unsigned int sound) {
   auto playable_sound = _sounds.find(sound);
 
   if (playable_sound == _sounds.end())
@@ -29,7 +29,7 @@ void AudioEngine::playSound(const std::string &sound) {
         _system->playSound(playable_sound->second, 0, false, &_channel));
 }
 
-void AudioEngine::loadSound(const std::string &sound,
+void AudioEngine::loadSound(unsigned int sound,
                             const std::string &soundFile) {
   auto playable_sound = _sounds.find(sound);
 
@@ -40,6 +40,11 @@ void AudioEngine::loadSound(const std::string &sound,
     checkFmodResults(_system->createSound(soundFile.c_str(), FMOD_DEFAULT,
                                               0, &_sounds[sound]));
   }
+}
+
+void AudioEngine::update()
+{
+    checkFmodResults(_system->update());
 }
 
 void AudioEngine::init() {
